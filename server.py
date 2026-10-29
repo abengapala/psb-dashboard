@@ -289,6 +289,11 @@ class App:
                     check=False,
                     capture_output=True,
                 )
+                subprocess.run(
+                    ["git", "-C", str(HERE), "pull", "--rebase", "-X", "ours", "origin", "main"],
+                    check=False,
+                    capture_output=True,
+                )
                 res = subprocess.run(["git", "-C", str(HERE), "push", "origin", "main"], check=False, capture_output=True, text=True)
                 if res.returncode == 0:
                     log(f"synced data.json to GitHub / Vercel ({src_name})")
