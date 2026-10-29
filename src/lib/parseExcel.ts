@@ -11,6 +11,8 @@ const TEAM_LABELS = new Set([
 ]);
 
 const KNOWN_PHOTOS: Record<string, string> = {
+  charles: 'photos/charles.png',
+  'charles cruz': 'photos/Charles Cruz.png',
   jhumir: 'photos/jhumir.png',
   'jhumir pena': 'photos/Jhumir Pena.png',
   'jhumir peña': 'photos/jhumir.png',
