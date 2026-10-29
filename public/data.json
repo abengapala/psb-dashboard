@@ -1,7 +1,7 @@
 {
   "month": "OCTOBER 2026",
-  "updatedAt": "2026-10-29T06:08:03",
-  "generatedAt": "2026-10-29T07:05:44",
+  "updatedAt": "2026-10-29T07:20:04",
+  "generatedAt": "2026-10-29T07:23:13",
   "kpi": {
     "manpower": 9,
     "bankTarget": 13102810.15,
@@ -21,7 +21,7 @@
       "obCured": 21222608.27,
       "repoPosted": 0,
       "repoCount": 0,
-      "photo": "photos/charles.png"
+      "photo": null
     },
     {
       "name": "Jhumir Peña",
@@ -145,27 +145,27 @@
     "confirmed": [
       {
         "bucket": "FRONT END",
-        "count": 0,
-        "ac": 0,
-        "ob": 0
+        "count": 13,
+        "ac": 397125.66,
+        "ob": 5292791.76
       },
       {
         "bucket": "MID RANGE",
-        "count": 0,
-        "ac": 0,
-        "ob": 0
+        "count": 3,
+        "ac": 126764.44,
+        "ob": 1817443.23
       },
       {
         "bucket": "HARDCORE",
-        "count": 0,
-        "ac": 0,
-        "ob": 0
+        "count": 1,
+        "ac": 40000,
+        "ob": 504973.44
       }
     ],
     "confirmedTotal": {
-      "count": 0,
-      "ac": 0,
-      "ob": 0
+      "count": 17,
+      "ac": 563890.1,
+      "ob": 7615208.43
     }
   }
 }
