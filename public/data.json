@@ -1,7 +1,7 @@
 {
   "month": "OCTOBER 2026",
-  "updatedAt": "2026-10-29T14:08:03",
-  "generatedAt": "2026-10-29T14:34:33",
+  "updatedAt": "2026-10-29T06:08:03",
+  "generatedAt": "2026-10-29T07:05:44",
   "kpi": {
     "manpower": 9,
     "bankTarget": 13102810.15,
@@ -19,7 +19,7 @@
       "target": 1692007.63,
       "pct": 53.09,
       "obCured": 21222608.27,
-      "repoPosted": 0.0,
+      "repoPosted": 0,
       "repoCount": 0,
       "photo": null
     },
@@ -30,7 +30,7 @@
       "target": 1692007.63,
       "pct": 87.67,
       "obCured": 31538916.29,
-      "repoPosted": 0.0,
+      "repoPosted": 0,
       "repoCount": 0,
       "photo": "photos/jhumir.png"
     },
@@ -63,7 +63,7 @@
       "target": 781146.87,
       "pct": 197.66,
       "obCured": 25134847.79,
-      "repoPosted": 736000.0,
+      "repoPosted": 736000,
       "repoCount": 1,
       "photo": "photos/aira.png"
     },
@@ -74,7 +74,7 @@
       "target": 781146.87,
       "pct": 89.7,
       "obCured": 17354712.91,
-      "repoPosted": 0.0,
+      "repoPosted": 0,
       "repoCount": 0,
       "photo": "photos/josafat.png"
     },
@@ -120,19 +120,19 @@
     "ptp": [
       {
         "bucket": "FRONT END",
-        "count": 34.0,
+        "count": 34,
         "ac": 961837.11,
         "ob": 20494463.75
       },
       {
         "bucket": "MIDRANGE",
-        "count": 9.0,
+        "count": 9,
         "ac": 234073.34,
         "ob": 6425844.44
       },
       {
         "bucket": "HARDCORE",
-        "count": 5.0,
+        "count": 5,
         "ac": 280723.76,
         "ob": 4636904.92
       }
@@ -145,27 +145,27 @@
     "confirmed": [
       {
         "bucket": "FRONT END",
-        "count": 13.0,
-        "ac": 397125.66,
-        "ob": 3310557.51
+        "count": 0,
+        "ac": 0,
+        "ob": 0
       },
       {
         "bucket": "MID RANGE",
-        "count": 3.0,
-        "ac": 126764.44,
-        "ob": 1817443.23
+        "count": 0,
+        "ac": 0,
+        "ob": 0
       },
       {
         "bucket": "HARDCORE",
-        "count": 1.0,
-        "ac": 40000.0,
-        "ob": 0.0
+        "count": 0,
+        "ac": 0,
+        "ob": 0
       }
     ],
     "confirmedTotal": {
-      "count": 17,
-      "ac": 563890.1,
-      "ob": 5128000.74
+      "count": 0,
+      "ac": 0,
+      "ob": 0
     }
   }
 }
