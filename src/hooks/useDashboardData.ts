@@ -9,6 +9,24 @@ export type Milestone = { id: number; agent: Agent };
 
 const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : 0);
 
+const DEFAULT_PHOTOS: Record<string, string> = {
+  charles: 'photos/charles.png',
+  jhumir: 'photos/jhumir.png',
+  polo: 'photos/polo.png',
+  jaymark: 'photos/jaymark.png',
+  aira: 'photos/aira.png',
+  josafat: 'photos/josafat.png',
+  eurie: 'photos/eurie.png',
+  chelsea: 'photos/Chelsea.png',
+  rodel: 'photos/rodel.png',
+};
+
+function resolvePhoto(name: string, photo: unknown): string | null {
+  if (typeof photo === 'string' && photo.trim()) return photo.trim();
+  const first = name.trim().toLowerCase().split(/\s+/)[0] || '';
+  return DEFAULT_PHOTOS[first] ?? null;
+}
+
 /** Defensive copy so a half-written or odd file never breaks the layout. */
 function normalize(raw: unknown): Data {
   const r = (raw ?? {}) as Partial<Data>;
@@ -38,7 +56,7 @@ function normalize(raw: unknown): Data {
         obCured: num(a.obCured),
         repoPosted: num(a.repoPosted),
         repoCount: num(a.repoCount),
-        photo: typeof a.photo === 'string' && a.photo ? a.photo : null,
+        photo: resolvePhoto(a.name, a.photo),
       })),
     warnings: Array.isArray(r.warnings) ? r.warnings.filter((w) => typeof w === 'string' && w.trim()) : [],
     eod: r.eod && typeof r.eod === 'object'
