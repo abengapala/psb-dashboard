@@ -1,0 +1,231 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+:root {
+  color-scheme: dark;
+  --font-sans: 'Geist Variable', 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --canvas: #050507;
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --hair: rgba(255, 255, 255, 0.14);
+  --t1: #FFFFFF;
+  --t2: rgba(255, 255, 255, 0.56);
+  --t3: rgba(255, 255, 255, 0.38);
+
+  /* Backward-compatible tokens for AdminPage */
+  --bg: #050507;
+  --card: #0e0f14;
+  --muted: #161821;
+  --border: rgba(255, 255, 255, 0.12);
+  --fg: #FFFFFF;
+  --fg2: rgba(255, 255, 255, 0.82);
+  --muted-fg: rgba(255, 255, 255, 0.56);
+}
+
+/* Optional ?theme=light override */
+html.light {
+  color-scheme: light;
+  --canvas: #eef1f6;
+  --glass-bg: rgba(15, 23, 42, 0.05);
+  --glass-border: rgba(15, 23, 42, 0.12);
+  --hair: rgba(15, 23, 42, 0.14);
+  --t1: #0b0b0c;
+  --t2: rgba(11, 11, 12, 0.64);
+  --t3: rgba(11, 11, 12, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--canvas);
+  color: var(--t1);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hide cursor after 3s of inactivity on the TV */
+body.cursor-hidden * {
+  cursor: none !important;
+}
+
+/* Continuous ambient TV animations so the screen never looks static */
+.tv-sweep::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 55%;
+  left: -65%;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 3;
+  animation: tv-hero-sweep 9s cubic-bezier(.32, .72, 0, 1) infinite;
+}
+
+@keyframes tv-hero-sweep {
+  0%, 45% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  85% {
+    transform: translateX(340%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(340%);
+    opacity: 0;
+  }
+}
+
+/* Continuous dot-matrix wave ripple across the hero number */
+.tv-dot-on {
+  animation: tv-dot-wave 5.5s ease-in-out infinite;
+  animation-delay: var(--dot-delay, 0ms);
+}
+
+@keyframes tv-dot-wave {
+  0%, 72%, 100% {
+    transform: scale(1);
+    fill: #FFFFFF;
+  }
+  84% {
+    transform: scale(1.26);
+    fill: #E8FF1F;
+  }
+}
+
+/* Continuous tick shimmer wave across gauge & row strips */
+.tv-tick-on {
+  animation: tv-tick-gleam 4.8s ease-in-out infinite;
+  animation-delay: var(--tick-delay, 0ms);
+}
+
+@keyframes tv-tick-gleam {
+  0%, 70%, 100% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.45;
+  }
+}
+
+/* Gentle floating motion for Podium 1st / 2nd / 3rd */
+.tv-float-1 {
+  animation: tv-float 4.2s ease-in-out infinite;
+}
+.tv-float-2 {
+  animation: tv-float 4.8s ease-in-out 0.7s infinite;
+}
+.tv-float-3 {
+  animation: tv-float 5.2s ease-in-out 1.4s infinite;
+}
+
+@keyframes tv-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Flowing stream wave inside Hero card */
+.tv-stream-1 {
+  animation: tv-stream-sway 7s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+.tv-stream-2 {
+  animation: tv-stream-sway 9s ease-in-out -2s infinite alternate-reverse;
+  transform-origin: center;
+}
+
+@keyframes tv-stream-sway {
+  0% {
+    transform: scaleY(0.92) translateY(2px);
+  }
+  100% {
+    transform: scaleY(1.08) translateY(-2px);
+  }
+}
+
+/* 2.4s live pulse on 1st-place ring and live dot */
+.tv-pulse-ring {
+  animation: tv-ring-glow 2.6s ease-in-out infinite;
+}
+
+@keyframes tv-ring-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 2.5px #E8FF1F, 0 0 16px rgba(232, 255, 31, 0.38);
+  }
+  50% {
+    box-shadow: 0 0 0 3.5px #E8FF1F, 0 0 32px rgba(232, 255, 31, 0.85);
+  }
+}
+
+.tv-live-dot {
+  animation: tv-calm-pulse 2s ease-in-out infinite;
+}
+
+@keyframes tv-calm-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes tv-page-timer {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-sweep::after,
+  .tv-pulse-ring,
+  .tv-live-dot,
+  .tv-dot-on,
+  .tv-tick-on,
+  .tv-float-1,
+  .tv-float-2,
+  .tv-float-3,
+  .tv-stream-1,
+  .tv-stream-2 {
+    animation: none !important;
+  }
+  .tv-card {
+    transition: none !important;
+  }
+}
+
+.admin-scroll {
+  overflow-y: auto;
+  scrollbar-width: thin;
+}

@@ -1,0 +1,171 @@
+{
+  "month": "OCTOBER 2026",
+  "updatedAt": "2026-10-29T14:08:03",
+  "generatedAt": "2026-10-29T14:14:16",
+  "kpi": {
+    "manpower": 9,
+    "bankTarget": 13102810.15,
+    "posted": 23976049.2,
+    "repoPosted": 15638758.72,
+    "repoCount": 16,
+    "variance": -10873239.05,
+    "pctAchieved": 182.98
+  },
+  "agents": [
+    {
+      "name": "Charles Cruz",
+      "month": "OCTOBER",
+      "finalPosted": 898293.2,
+      "target": 1692007.63,
+      "pct": 53.09,
+      "obCured": 21222608.27,
+      "repoPosted": 0.0,
+      "repoCount": 0,
+      "photo": null
+    },
+    {
+      "name": "Jhumir Peña",
+      "month": "OCTOBER",
+      "finalPosted": 1483431.96,
+      "target": 1692007.63,
+      "pct": 87.67,
+      "obCured": 31538916.29,
+      "repoPosted": 0.0,
+      "repoCount": 0,
+      "photo": "photos/jhumir.png"
+    },
+    {
+      "name": "Polo Savedra",
+      "month": "OCTOBER",
+      "finalPosted": 2113290.72,
+      "target": 1692007.63,
+      "pct": 124.9,
+      "obCured": 32380583.9,
+      "repoPosted": 638453.94,
+      "repoCount": 1,
+      "photo": "photos/polo.png"
+    },
+    {
+      "name": "Jaymark Mosende",
+      "month": "OCTOBER",
+      "finalPosted": 3153790.16,
+      "target": 1692007.63,
+      "pct": 186.39,
+      "obCured": 36830970.94,
+      "repoPosted": 1236290.21,
+      "repoCount": 2,
+      "photo": "photos/jaymark.png"
+    },
+    {
+      "name": "Aira Borong",
+      "month": "OCTOBER",
+      "finalPosted": 1543992.64,
+      "target": 781146.87,
+      "pct": 197.66,
+      "obCured": 25134847.79,
+      "repoPosted": 736000.0,
+      "repoCount": 1,
+      "photo": "photos/aira.png"
+    },
+    {
+      "name": "Josafat Galope",
+      "month": "OCTOBER",
+      "finalPosted": 700707.23,
+      "target": 781146.87,
+      "pct": 89.7,
+      "obCured": 17354712.91,
+      "repoPosted": 0.0,
+      "repoCount": 0,
+      "photo": "photos/josafat.png"
+    },
+    {
+      "name": "Eurie Bastasa",
+      "month": "OCTOBER",
+      "finalPosted": 2505576.05,
+      "target": 781146.87,
+      "pct": 320.76,
+      "obCured": 17950372.67,
+      "repoPosted": 1910641.22,
+      "repoCount": 2,
+      "photo": "photos/eurie.png"
+    },
+    {
+      "name": "Chelsea Sayson",
+      "month": "OCTOBER",
+      "finalPosted": 5726394.15,
+      "target": 1995669.51,
+      "pct": 286.94,
+      "obCured": 10223452.68,
+      "repoPosted": 5455800.26,
+      "repoCount": 5,
+      "photo": "photos/Chelsea.png"
+    },
+    {
+      "name": "Rodel Hama",
+      "month": "OCTOBER",
+      "finalPosted": 5850573.09,
+      "target": 1995669.51,
+      "pct": 293.16,
+      "obCured": 8974159.94,
+      "repoPosted": 5661573.09,
+      "repoCount": 5,
+      "photo": "photos/rodel.png"
+    }
+  ],
+  "warnings": [
+    "Row auto-fixed: '843.030.23' → 843,030.23 for Eurie Bastasa (Row 20244)"
+  ],
+  "eod": {
+    "sheet": "EOD REPORT 2026",
+    "ptp": [
+      {
+        "bucket": "FRONT END",
+        "count": 34.0,
+        "ac": 961837.11,
+        "ob": 20494463.75
+      },
+      {
+        "bucket": "MIDRANGE",
+        "count": 9.0,
+        "ac": 234073.34,
+        "ob": 6425844.44
+      },
+      {
+        "bucket": "HARDCORE",
+        "count": 5.0,
+        "ac": 280723.76,
+        "ob": 4636904.92
+      }
+    ],
+    "ptpTotal": {
+      "count": 48,
+      "ac": 1476634.21,
+      "ob": 31557213.11
+    },
+    "confirmed": [
+      {
+        "bucket": "FRONT END",
+        "count": 13.0,
+        "ac": 397125.66,
+        "ob": 3310557.51
+      },
+      {
+        "bucket": "MID RANGE",
+        "count": 3.0,
+        "ac": 126764.44,
+        "ob": 1817443.23
+      },
+      {
+        "bucket": "HARDCORE",
+        "count": 1.0,
+        "ac": 40000.0,
+        "ob": 0.0
+      }
+    ],
+    "confirmedTotal": {
+      "count": 17,
+      "ac": 563890.1,
+      "ob": 5128000.74
+    }
+  }
+}
