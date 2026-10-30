@@ -1,24 +1,24 @@
 {
   "month": "OCTOBER 2026",
-  "updatedAt": "2026-10-30T01:05:48",
-  "generatedAt": "2026-10-30T01:17:55",
+  "updatedAt": "2026-10-30T07:58:40",
+  "generatedAt": "2026-10-30T07:59:11",
   "kpi": {
     "manpower": 9,
     "bankTarget": 13102810.15,
-    "posted": 24119130.68,
+    "posted": 24277874.82,
     "repoPosted": 15638758.72,
     "repoCount": 16,
-    "variance": -11016320.53,
-    "pctAchieved": 184.08
+    "variance": -11175064.67,
+    "pctAchieved": 185.29
   },
   "agents": [
     {
       "name": "Charles Cruz",
       "month": "OCTOBER",
-      "finalPosted": 898293.2,
+      "finalPosted": 956857.57,
       "target": 1692007.63,
-      "pct": 53.09,
-      "obCured": 21222608.27,
+      "pct": 56.55,
+      "obCured": 23094580.48,
       "repoPosted": 0,
       "repoCount": 0,
       "photo": "photos/charles.png"
@@ -26,10 +26,10 @@
     {
       "name": "Jhumir Peña",
       "month": "OCTOBER",
-      "finalPosted": 1483431.96,
+      "finalPosted": 1583611.73,
       "target": 1692007.63,
-      "pct": 87.67,
-      "obCured": 31538916.29,
+      "pct": 93.59,
+      "obCured": 33460227.46,
       "repoPosted": 0,
       "repoCount": 0,
       "photo": "photos/jhumir.png"
@@ -121,26 +121,26 @@
       {
         "bucket": "FRONT END",
         "count": 16,
-        "ac": 961837.11,
-        "ob": 20494463.75
+        "ac": 496068.3,
+        "ob": 4834144.07
       },
       {
         "bucket": "MIDRANGE",
         "count": 4,
-        "ac": 234073.34,
-        "ob": 6425844.44
+        "ac": 145963.34,
+        "ob": 3661638.24
       },
       {
         "bucket": "HARDCORE",
-        "count": 5,
-        "ac": 280723.76,
-        "ob": 4636904.92
+        "count": 6,
+        "ac": 312237.12,
+        "ob": 4587938.61
       }
     ],
     "ptpTotal": {
-      "count": 25,
-      "ac": 1476634.21,
-      "ob": 31557213.11
+      "count": 26,
+      "ac": 954268.76,
+      "ob": 13083720.92
     },
     "confirmed": [
       {
