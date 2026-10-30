@@ -1,7 +1,7 @@
 {
   "month": "OCTOBER 2026",
-  "updatedAt": "2026-10-30T07:58:40",
-  "generatedAt": "2026-10-30T07:59:11",
+  "updatedAt": "2026-10-30T08:01:27",
+  "generatedAt": "2026-10-30T08:01:54",
   "kpi": {
     "manpower": 9,
     "bankTarget": 13102810.15,
@@ -146,8 +146,8 @@
       {
         "bucket": "FRONT END",
         "count": 0,
-        "ac": 0,
-        "ob": 0
+        "ac": 267244.8,
+        "ob": 5943488.48
       },
       {
         "bucket": "MID RANGE",
@@ -164,8 +164,8 @@
     ],
     "confirmedTotal": {
       "count": 0,
-      "ac": 0,
-      "ob": 0
+      "ac": 267244.8,
+      "ob": 5943488.48
     }
   }
 }
