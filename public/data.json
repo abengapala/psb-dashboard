@@ -1,15 +1,15 @@
 {
   "month": "OCTOBER 2026",
-  "updatedAt": "2026-10-29T09:55:22",
-  "generatedAt": "2026-10-29T09:55:29",
+  "updatedAt": "2026-10-30T01:05:48",
+  "generatedAt": "2026-10-30T01:17:55",
   "kpi": {
     "manpower": 9,
     "bankTarget": 13102810.15,
-    "posted": 23976049.2,
+    "posted": 24119130.68,
     "repoPosted": 15638758.72,
     "repoCount": 16,
-    "variance": -10873239.05,
-    "pctAchieved": 182.98
+    "variance": -11016320.53,
+    "pctAchieved": 184.08
   },
   "agents": [
     {
@@ -37,10 +37,10 @@
     {
       "name": "Polo Savedra",
       "month": "OCTOBER",
-      "finalPosted": 2113290.72,
+      "finalPosted": 2238190.75,
       "target": 1692007.63,
-      "pct": 124.9,
-      "obCured": 32380583.9,
+      "pct": 132.28,
+      "obCured": 34823394.67,
       "repoPosted": 638453.94,
       "repoCount": 1,
       "photo": "photos/polo.png"
@@ -48,10 +48,10 @@
     {
       "name": "Jaymark Mosende",
       "month": "OCTOBER",
-      "finalPosted": 3153790.16,
+      "finalPosted": 3171971.61,
       "target": 1692007.63,
-      "pct": 186.39,
-      "obCured": 36830970.94,
+      "pct": 187.47,
+      "obCured": 36881528.69,
       "repoPosted": 1236290.21,
       "repoCount": 2,
       "photo": "photos/jaymark.png"
@@ -120,13 +120,13 @@
     "ptp": [
       {
         "bucket": "FRONT END",
-        "count": 34,
+        "count": 16,
         "ac": 961837.11,
         "ob": 20494463.75
       },
       {
         "bucket": "MIDRANGE",
-        "count": 9,
+        "count": 4,
         "ac": 234073.34,
         "ob": 6425844.44
       },
@@ -138,7 +138,7 @@
       }
     ],
     "ptpTotal": {
-      "count": 48,
+      "count": 25,
       "ac": 1476634.21,
       "ob": 31557213.11
     },
