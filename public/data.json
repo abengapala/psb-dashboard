@@ -57,6 +57,28 @@
       "photo": "photos/jaymark.png"
     },
     {
+      "name": "Chelsea Sayson",
+      "month": "NOVEMBER",
+      "finalPosted": 860688.81,
+      "target": 1692007.63,
+      "pct": 50.87,
+      "obCured": 8292348.25,
+      "repoPosted": 516841.34,
+      "repoCount": 1,
+      "photo": "photos/Chelsea.png"
+    },
+    {
+      "name": "Rodel Hama",
+      "month": "NOVEMBER",
+      "finalPosted": 150450.94,
+      "target": 1692007.63,
+      "pct": 8.89,
+      "obCured": 2572294.94,
+      "repoPosted": 0.0,
+      "repoCount": 0,
+      "photo": "photos/rodel.png"
+    },
+    {
       "name": "Aira Borong",
       "month": "NOVEMBER",
       "finalPosted": 185428.83,
