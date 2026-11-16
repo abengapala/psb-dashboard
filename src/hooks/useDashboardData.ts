@@ -44,6 +44,14 @@ function normalize(raw: unknown): Data {
       repoCount: num(k.repoCount),
       variance: num(k.variance),
       pctAchieved: num(k.pctAchieved),
+      ...(k.obTargetTotal !== undefined
+        ? {
+            obTargetTotal: num(k.obTargetTotal),
+            obCuredTotal: num(k.obCuredTotal),
+            obVariance: num(k.obVariance),
+            obPctAchieved: num(k.obPctAchieved),
+          }
+        : {}),
     },
     agents: agents
       .filter((a) => a && typeof a.name === 'string' && a.name.trim())
@@ -54,6 +62,9 @@ function normalize(raw: unknown): Data {
         target: num(a.target),
         pct: num(a.pct),
         obCured: num(a.obCured),
+        ...(a.obTarget !== undefined
+          ? { obTarget: num(a.obTarget), obPct: num(a.obPct) }
+          : {}),
         repoPosted: num(a.repoPosted),
         repoCount: num(a.repoCount),
         photo: resolvePhoto(a.name, a.photo),

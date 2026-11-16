@@ -221,6 +221,43 @@ class App:
             "confirmedTotal": totals(conf_rows),
         }
 
+    @staticmethod
+    def _read_ob_targets(xlsx: Path) -> dict[str, float]:
+        """Read the Internal OB Target column (e.g. 'INTERAL OB TARGET') from AGENTS PERFORMANCE."""
+        from openpyxl import load_workbook
+        with tempfile.TemporaryDirectory() as tmp:
+            copy = Path(tmp) / "ob_tgt.xlsx"
+            shutil.copy2(xlsx, copy)
+            wb = load_workbook(copy, data_only=True, read_only=True)
+            try:
+                ws = wb[next((n for n in wb.sheetnames if n.strip().upper() == "AGENTS PERFORMANCE"), "AGENTS PERFORMANCE")]
+                ws.reset_dimensions()
+                rows = list(ws.iter_rows(max_row=60, max_col=15, values_only=True))
+            finally:
+                wb.close()
+        out: dict[str, float] = {}
+        ob_col = None
+        for r in rows:
+            if not r:
+                continue
+            row_u = [str(c).strip().upper() if c is not None else "" for c in r]
+            if "AGENT NAME" in row_u:
+                ob_col = next((j for j, h in enumerate(row_u) if "OB TARGET" in h), None)
+                continue
+            if ob_col is None:
+                continue
+            name = " ".join(str(r[1]).split()) if len(r) > 1 and r[1] is not None else ""
+            if not name:
+                if out:
+                    break
+                continue
+            if name.upper() in {"FRONTEND", "FRONT END", "MIDRANGE", "MID RANGE", "HARDCORE", "HARD CORE", "AGENT NAME"}:
+                continue
+            val = r[ob_col] if ob_col < len(r) else None
+            if isinstance(val, (int, float)) and val > 0:
+                out[name.lower()] = float(val)
+        return out
+
     def rebuild(self, xlsx: Path):
         """Run the existing generator; returns (ok, message, warnings)."""
         with self.lock:
@@ -258,6 +295,22 @@ class App:
                 eod = self._read_eod(xlsx)
                 if eod is not None:
                     data["eod"] = eod
+                    changed = True
+                ob_targets = self._read_ob_targets(xlsx)
+                if ob_targets:
+                    ob_target_sum = 0.0
+                    ob_cured_sum = 0.0
+                    for a in data.get("agents", []):
+                        ob_t = ob_targets.get(a["name"].lower(), 0.0)
+                        ob_c = float(a.get("obCured") or 0.0)
+                        a["obTarget"] = round(ob_t, 2)
+                        a["obPct"] = round((ob_c / ob_t * 100) if ob_t else 0.0, 2)
+                        ob_target_sum += ob_t
+                        ob_cured_sum += ob_c
+                    data["kpi"]["obTargetTotal"] = round(ob_target_sum, 2)
+                    data["kpi"]["obCuredTotal"] = round(ob_cured_sum, 2)
+                    data["kpi"]["obVariance"] = round(ob_target_sum - ob_cured_sum, 2)
+                    data["kpi"]["obPctAchieved"] = round((ob_cured_sum / ob_target_sum * 100) if ob_target_sum else 0.0, 2)
                     changed = True
                 out_json = json.dumps(data, indent=2, ensure_ascii=False)
                 if changed:

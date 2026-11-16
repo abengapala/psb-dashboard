@@ -5,6 +5,8 @@ export type Agent = {
   target: number;
   pct: number;
   obCured: number;
+  obTarget?: number;
+  obPct?: number;
   repoPosted: number;
   repoCount: number;
   photo: string | null;
@@ -18,6 +20,10 @@ export type KPI = {
   repoCount: number;
   variance: number;
   pctAchieved: number;
+  obTargetTotal?: number;
+  obCuredTotal?: number;
+  obVariance?: number;
+  obPctAchieved?: number;
 };
 
 export type EodBucket = {

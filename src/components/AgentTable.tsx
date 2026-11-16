@@ -117,10 +117,10 @@ export function AgentTable({
         <span>#</span>
         <span>Agent</span>
         <span>Month</span>
-        <span style={{ textAlign: 'right' }}>Final Posted</span>
-        <span style={{ textAlign: 'right' }}>Individual Target</span>
+        <span style={{ textAlign: 'right' }}>Actual OB Cured</span>
+        <span style={{ textAlign: 'right' }}>Internal OB Target</span>
         <span style={{ paddingLeft: '0.4vw' }}>Percent Achieved</span>
-        <span style={{ textAlign: 'right' }}>OB Cured</span>
+        <span style={{ textAlign: 'right' }}>Final Posted</span>
       </div>
 
       {/* Rows */}
@@ -140,7 +140,10 @@ export function AgentTable({
         ) : (
           <AnimatePresence initial={false}>
             {agents.map((agent, i) => {
-              const pctCol = statusColor(agent.pct);
+              const hasOb = (agent.obTarget ?? 0) > 0;
+              const rowPct = hasOb ? (agent.obPct ?? 0) : agent.pct;
+              const rowTarget = hasOb ? (agent.obTarget ?? 0) : agent.target;
+              const pctCol = statusColor(rowPct);
               const isSpot = !reduce && i === spotlight;
               return (
                 <motion.div
@@ -221,7 +224,7 @@ export function AgentTable({
                     {agent.month}
                   </span>
 
-                  {/* FINAL POSTED */}
+                  {/* ACTUAL OB CURED */}
                   <span
                     style={{
                       textAlign: 'right',
@@ -231,12 +234,12 @@ export function AgentTable({
                       letterSpacing: '-0.02em',
                     }}
                   >
-                    <FlashValue value={agent.finalPosted}>
-                      <CountUp value={agent.finalPosted} format={peso} />
+                    <FlashValue value={agent.obCured}>
+                      <CountUp value={agent.obCured} format={peso} />
                     </FlashValue>
                   </span>
 
-                  {/* INDIVIDUAL TARGET */}
+                  {/* INTERNAL OB TARGET */}
                   <span
                     style={{
                       textAlign: 'right',
@@ -246,7 +249,7 @@ export function AgentTable({
                       letterSpacing: '-0.02em',
                     }}
                   >
-                    <CountUp value={agent.target} format={peso} />
+                    <CountUp value={rowTarget} format={peso} />
                   </span>
 
                   {/* PERCENT ACHIEVED: 36-tick strip + big % */}
@@ -260,7 +263,7 @@ export function AgentTable({
                     }}
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <TickStrip pct={agent.pct} rowIndex={i} firstLoad={firstLoad} />
+                      <TickStrip pct={rowPct} rowIndex={i} firstLoad={firstLoad} />
                     </div>
                     <span
                       style={{
@@ -272,13 +275,13 @@ export function AgentTable({
                         letterSpacing: '-0.03em',
                       }}
                     >
-                      <FlashValue value={agent.pct}>
-                        <CountUp value={agent.pct} format={(n) => `${Math.round(n)}%`} />
+                      <FlashValue value={rowPct}>
+                        <CountUp value={rowPct} format={(n) => `${Math.round(n)}%`} />
                       </FlashValue>
                     </span>
                   </div>
 
-                  {/* OB CURED */}
+                  {/* FINAL POSTED */}
                   <span
                     style={{
                       textAlign: 'right',
@@ -288,8 +291,8 @@ export function AgentTable({
                       letterSpacing: '-0.02em',
                     }}
                   >
-                    <FlashValue value={agent.obCured}>
-                      <CountUp value={agent.obCured} format={peso} />
+                    <FlashValue value={agent.finalPosted}>
+                      <CountUp value={agent.finalPosted} format={peso} />
                     </FlashValue>
                   </span>
                 </motion.div>

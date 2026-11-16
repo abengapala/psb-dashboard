@@ -15,12 +15,17 @@ export function RankingCard({
   title: string;
   subtitle: string;
   agents: Agent[];
-  mode: 'posted' | 'repo';
+  mode: 'ob' | 'posted' | 'repo';
   delay: number;
   entered: boolean;
 }) {
   const sorted: RankedAgent[] = [...agents]
     .sort((a, b) => {
+      if (mode === 'ob') {
+        const pctDiff = (b.obPct ?? 0) - (a.obPct ?? 0);
+        if (Math.abs(pctDiff) > 0.01) return pctDiff;
+        return b.obCured - a.obCured;
+      }
       if (mode === 'posted') return b.finalPosted - a.finalPosted;
       if (b.repoCount !== a.repoCount) return b.repoCount - a.repoCount;
       return b.repoPosted - a.repoPosted;
@@ -30,9 +35,16 @@ export function RankingCard({
   const top3 = sorted.slice(0, 3);
   const rows = sorted.slice(3, 6); // Ranks 4, 5, 6 fill the lower half cleanly
 
-  const getPrimary = (a: RankedAgent) => (mode === 'posted' ? a.finalPosted : a.repoCount);
-  const formatPrimary = (n: number) => (mode === 'posted' ? peso(n) : `${int(n)} ${Math.round(n) === 1 ? 'repo' : 'repos'}`);
-  const getSecondary = mode === 'repo' ? (a: RankedAgent) => peso(a.repoPosted) : undefined;
+  const getPrimary = (a: RankedAgent) =>
+    mode === 'ob' ? a.obCured : mode === 'posted' ? a.finalPosted : a.repoCount;
+  const formatPrimary = (n: number) =>
+    mode === 'repo' ? `${int(n)} ${Math.round(n) === 1 ? 'repo' : 'repos'}` : peso(n);
+  const getSecondary =
+    mode === 'repo'
+      ? (a: RankedAgent) => peso(a.repoPosted)
+      : mode === 'ob'
+        ? (a: RankedAgent) => `${Math.round(a.obPct ?? 0)}% of ${peso(a.obTarget ?? 0)}`
+        : undefined;
 
   return (
     <Card
@@ -60,7 +72,7 @@ export function RankingCard({
               width: 8,
               height: 8,
               borderRadius: '50%',
-              background: mode === 'posted' ? C.lime : C.peach,
+              background: mode === 'repo' ? C.peach : C.lime,
             }}
           />
           <h2
@@ -167,6 +179,17 @@ export function RankingCard({
                     }}
                   >
                     {peso(agent.repoPosted)}
+                  </span>
+                )}
+                {mode === 'ob' && (agent.obTarget ?? 0) > 0 && (
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 'clamp(10px, 0.78vw, 14px)',
+                      color: 'var(--t3)',
+                    }}
+                  >
+                    {Math.round(agent.obPct ?? 0)}%
                   </span>
                 )}
                 <span

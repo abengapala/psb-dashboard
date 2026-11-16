@@ -20,8 +20,13 @@ export function KpiRow({
   postedDelta: number;
   entered: boolean;
 }) {
-  const aboveTarget = kpi.variance <= 0;
-  const absVariance = Math.abs(kpi.variance);
+  const hasOb = (kpi.obTargetTotal ?? 0) > 0;
+  const heroVal = hasOb ? (kpi.obCuredTotal ?? 0) : kpi.posted;
+  const targetVal = hasOb ? (kpi.obTargetTotal ?? 0) : kpi.bankTarget;
+  const varianceVal = hasOb ? (kpi.obVariance ?? 0) : kpi.variance;
+  const pctVal = hasOb ? (kpi.obPctAchieved ?? 0) : kpi.pctAchieved;
+  const aboveTarget = varianceVal <= 0;
+  const absVariance = Math.abs(varianceVal);
 
   return (
     <div
@@ -42,7 +47,9 @@ export function KpiRow({
         style={{ gridColumn: 'span 4', padding: 'clamp(12px, 1.15vw, 22px)' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-          <span style={{ ...CAP, color: 'rgba(255,255,255,0.78)' }}>Payment Posted</span>
+          <span style={{ ...CAP, color: 'rgba(255,255,255,0.78)' }}>
+            {hasOb ? 'Actual OB Cured' : 'Payment Posted'}
+          </span>
           <span
             style={{
               display: 'inline-flex',
@@ -59,13 +66,13 @@ export function KpiRow({
               letterSpacing: '-0.02em',
             }}
           >
-            <CountUp value={kpi.pctAchieved} format={(n) => `${Math.round(n)}% of target`} />
+            <CountUp value={pctVal} format={(n) => `${Math.round(n)}% of target`} />
           </span>
         </div>
 
         <div style={{ position: 'relative', zIndex: 2, margin: 'auto 0', paddingTop: '0.3vh' }}>
-          <FlashValue value={kpi.posted}>
-            <DotNumber value={kpi.posted} />
+          <FlashValue value={heroVal}>
+            <DotNumber value={heroVal} />
           </FlashValue>
         </div>
 
@@ -119,11 +126,19 @@ export function KpiRow({
             fontFamily: 'var(--font-mono)',
           }}
         >
-          <span>of {peso(kpi.bankTarget)} bank target</span>
-          {postedDelta > 0 && (
+          <span>
+            of {peso(targetVal)} {hasOb ? 'internal OB target' : 'bank target'}
+          </span>
+          {hasOb ? (
             <span style={{ color: C.lime, fontWeight: 600 }}>
-              +{peso(postedDelta)} this refresh
+              Posted: {peso(kpi.posted)}
             </span>
+          ) : (
+            postedDelta > 0 && (
+              <span style={{ color: C.lime, fontWeight: 600 }}>
+                +{peso(postedDelta)} this refresh
+              </span>
+            )
           )}
         </div>
       </Card>
@@ -136,7 +151,9 @@ export function KpiRow({
         style={{ gridColumn: 'span 2', padding: 'clamp(12px, 1.15vw, 22px)' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ ...CAP, color: 'var(--t2)' }}>Bank Target</span>
+          <span style={{ ...CAP, color: 'var(--t2)' }}>
+            {hasOb ? 'Internal OB Target' : 'Bank Target'}
+          </span>
         </div>
         <div style={{ margin: 'auto 0' }}>
           <div
@@ -148,13 +165,13 @@ export function KpiRow({
               color: 'var(--t1)',
             }}
           >
-            <FlashValue value={kpi.bankTarget}>
-              <CountUp value={kpi.bankTarget} format={peso} />
+            <FlashValue value={targetVal}>
+              <CountUp value={targetVal} format={peso} />
             </FlashValue>
           </div>
         </div>
         <div style={{ fontSize: 'clamp(10px, 0.75vw, 14px)', color: 'var(--t3)', fontWeight: 500 }}>
-          Monthly goal · {kpi.manpower} agents
+          {hasOb ? `Total OB goal · ${kpi.manpower} agents` : `Monthly goal · ${kpi.manpower} agents`}
         </div>
       </Card>
 
@@ -251,7 +268,7 @@ export function KpiRow({
             Goal 100%
           </span>
         </div>
-        <TickGauge pct={kpi.pctAchieved} />
+        <TickGauge pct={pctVal} />
       </Card>
 
       {/* 5. VS POSTED / COUNT (span 2): Glass card with peach accent */}

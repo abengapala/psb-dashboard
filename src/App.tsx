@@ -188,10 +188,10 @@ function TVDashboard() {
               }}
             >
               <RankingCard
-                title="Posted Ranking"
-                subtitle="By final posted"
+                title={(data.kpi.obTargetTotal ?? 0) > 0 ? 'OB Cured Ranking' : 'Posted Ranking'}
+                subtitle={(data.kpi.obTargetTotal ?? 0) > 0 ? 'By actual OB cured' : 'By final posted'}
                 agents={data.agents}
-                mode="posted"
+                mode={(data.kpi.obTargetTotal ?? 0) > 0 ? 'ob' : 'posted'}
                 delay={560}
                 entered={entered}
               />

@@ -205,7 +205,15 @@ export async function parseExcelFile(file: File): Promise<{ data: Data; summary:
   const month = sheetMonth || `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
 
   const targets = new Map<string, number>();
+  const obTargets = new Map<string, number>();
+  let obTargetCol = -1;
   for (const r of perf.slice(1)) {
+    const rowU = Array.isArray(r) ? r.map((c) => cleanName(c).toUpperCase()) : [];
+    if (rowU.includes('AGENT NAME')) {
+      const idx = rowU.findIndex((h) => h.includes('OB TARGET'));
+      if (idx >= 0) obTargetCol = idx;
+      continue;
+    }
     const name = cleanName(r?.[1]);
     if (!name) {
       if (targets.size > 0) break;
@@ -214,6 +222,10 @@ export async function parseExcelFile(file: File): Promise<{ data: Data; summary:
     if (TEAM_LABELS.has(name.toUpperCase()) || name.toUpperCase() === 'AGENT NAME') continue;
     const t = numRaw(r?.[2]);
     if (t && t > 0) targets.set(name, t);
+    if (obTargetCol >= 0) {
+      const obt = numRaw(r?.[obTargetCol]);
+      if (obt && obt > 0) obTargets.set(name, obt);
+    }
   }
 
   if (targets.size === 0) {
@@ -316,6 +328,8 @@ export async function parseExcelFile(file: File): Promise<{ data: Data; summary:
   const agents = Array.from(targets.entries()).map(([name, target]) => {
     const s = stats.get(name)!;
     const finalPosted = s.pay + s.repo;
+    const obTarget = obTargets.get(name) || 0;
+    const obPct = obTarget ? Math.round((s.obCured / obTarget) * 10000) / 100 : 0;
     return {
       name,
       month: shortMonth,
@@ -323,6 +337,7 @@ export async function parseExcelFile(file: File): Promise<{ data: Data; summary:
       target: Math.round(target * 100) / 100,
       pct: target ? Math.round((finalPosted / target) * 10000) / 100 : 0,
       obCured: Math.round(s.obCured * 100) / 100,
+      ...(obTarget > 0 ? { obTarget: Math.round(obTarget * 100) / 100, obPct } : {}),
       repoPosted: Math.round(s.repo * 100) / 100,
       repoCount: s.repoN,
       photo: matchPhoto(name),
@@ -335,6 +350,10 @@ export async function parseExcelFile(file: File): Promise<{ data: Data; summary:
   const repoCount = agents.reduce((a, b) => a + b.repoCount, 0);
   const variance = Math.round((bankTarget - posted) * 100) / 100;
   const pctAchieved = bankTarget ? Math.round((posted / bankTarget) * 10000) / 100 : 0;
+  const obTargetTotal = Math.round(agents.reduce((a, b) => a + (b.obTarget || 0), 0) * 100) / 100;
+  const obCuredTotal = Math.round(agents.reduce((a, b) => a + b.obCured, 0) * 100) / 100;
+  const obVariance = Math.round((obTargetTotal - obCuredTotal) * 100) / 100;
+  const obPctAchieved = obTargetTotal ? Math.round((obCuredTotal / obTargetTotal) * 10000) / 100 : 0;
 
   const eod = parseEod(wb, ptp);
   const fileTime = new Date(file.lastModified || Date.now()).toISOString().slice(0, 19);
@@ -352,6 +371,9 @@ export async function parseExcelFile(file: File): Promise<{ data: Data; summary:
       repoCount,
       variance,
       pctAchieved,
+      ...(obTargetTotal > 0
+        ? { obTargetTotal, obCuredTotal, obVariance, obPctAchieved }
+        : {}),
     },
     agents,
     warnings,

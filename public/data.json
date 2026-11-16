@@ -1,7 +1,7 @@
 {
   "month": "NOVEMBER 2026",
   "updatedAt": "2026-11-16T16:13:03",
-  "generatedAt": "2026-11-16T16:31:01",
+  "generatedAt": "2026-11-16T16:37:48",
   "kpi": {
     "manpower": 9,
     "bankTarget": 12495486.39,
@@ -9,7 +9,11 @@
     "repoPosted": 1971713.93,
     "repoCount": 3,
     "variance": 7803305.31,
-    "pctAchieved": 37.55
+    "pctAchieved": 37.55,
+    "obTargetTotal": 225000000.0,
+    "obCuredTotal": 61053181.67,
+    "obVariance": 163946818.33,
+    "obPctAchieved": 27.13
   },
   "agents": [
     {
@@ -21,7 +25,9 @@
       "obCured": 4741149.37,
       "repoPosted": 0.0,
       "repoCount": 0,
-      "photo": "photos/charles.png"
+      "photo": "photos/charles.png",
+      "obTarget": 25000000.0,
+      "obPct": 18.96
     },
     {
       "name": "Jhumir Peña",
@@ -32,7 +38,9 @@
       "obCured": 11143650.31,
       "repoPosted": 0.0,
       "repoCount": 0,
-      "photo": "photos/jhumir.png"
+      "photo": "photos/jhumir.png",
+      "obTarget": 25000000.0,
+      "obPct": 44.57
     },
     {
       "name": "Polo Savedra",
@@ -43,7 +51,9 @@
       "obCured": 8243605.13,
       "repoPosted": 0.0,
       "repoCount": 0,
-      "photo": "photos/polo.png"
+      "photo": "photos/polo.png",
+      "obTarget": 25000000.0,
+      "obPct": 32.97
     },
     {
       "name": "Jaymark Mosende",
@@ -54,7 +64,9 @@
       "obCured": 9677700.4,
       "repoPosted": 0.0,
       "repoCount": 0,
-      "photo": "photos/jaymark.png"
+      "photo": "photos/jaymark.png",
+      "obTarget": 25000000.0,
+      "obPct": 38.71
     },
     {
       "name": "Chelsea Sayson",
@@ -65,7 +77,9 @@
       "obCured": 8292348.25,
       "repoPosted": 516841.34,
       "repoCount": 1,
-      "photo": "photos/Chelsea.png"
+      "photo": "photos/Chelsea.png",
+      "obTarget": 25000000.0,
+      "obPct": 33.17
     },
     {
       "name": "Rodel Hama",
@@ -76,7 +90,9 @@
       "obCured": 2572294.94,
       "repoPosted": 0.0,
       "repoCount": 0,
-      "photo": "photos/rodel.png"
+      "photo": "photos/rodel.png",
+      "obTarget": 25000000.0,
+      "obPct": 10.29
     },
     {
       "name": "Aira Borong",
@@ -87,7 +103,9 @@
       "obCured": 7068638.89,
       "repoPosted": 736000.0,
       "repoCount": 1,
-      "photo": "photos/aira.png"
+      "photo": "photos/aira.png",
+      "obTarget": 25000000.0,
+      "obPct": 28.27
     },
     {
       "name": "Josafat Galope",
@@ -98,7 +116,9 @@
       "obCured": 4429316.55,
       "repoPosted": 718872.59,
       "repoCount": 1,
-      "photo": "photos/josafat.png"
+      "photo": "photos/josafat.png",
+      "obTarget": 25000000.0,
+      "obPct": 17.72
     },
     {
       "name": "Eurie Bastasa",
@@ -109,7 +129,9 @@
       "obCured": 4884477.83,
       "repoPosted": 0.0,
       "repoCount": 0,
-      "photo": "photos/eurie.png"
+      "photo": "photos/eurie.png",
+      "obTarget": 25000000.0,
+      "obPct": 19.54
     }
   ],
   "warnings": [],
