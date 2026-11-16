@@ -1,58 +1,58 @@
 {
   "month": "NOVEMBER 2026",
-  "updatedAt": "2026-11-09T09:30:59",
-  "generatedAt": "2026-11-09T09:33:02",
+  "updatedAt": "2026-11-16T16:13:03",
+  "generatedAt": "2026-11-16T16:31:01",
   "kpi": {
     "manpower": 9,
-    "bankTarget": 13102810.15,
-    "posted": 2179533.72,
-    "repoPosted": 1235713.93,
-    "repoCount": 2,
-    "variance": 10923276.43,
-    "pctAchieved": 16.63
+    "bankTarget": 12495486.39,
+    "posted": 4692181.08,
+    "repoPosted": 1971713.93,
+    "repoCount": 3,
+    "variance": 7803305.31,
+    "pctAchieved": 37.55
   },
   "agents": [
     {
       "name": "Charles Cruz",
       "month": "NOVEMBER",
-      "finalPosted": 68217.35,
+      "finalPosted": 200321.5,
       "target": 1692007.63,
-      "pct": 4.03,
-      "obCured": 1231302.93,
-      "repoPosted": 0,
+      "pct": 11.84,
+      "obCured": 4741149.37,
+      "repoPosted": 0.0,
       "repoCount": 0,
       "photo": "photos/charles.png"
     },
     {
       "name": "Jhumir Peña",
       "month": "NOVEMBER",
-      "finalPosted": 88621.57,
+      "finalPosted": 504304.25,
       "target": 1692007.63,
-      "pct": 5.24,
-      "obCured": 2287079.87,
-      "repoPosted": 0,
+      "pct": 29.81,
+      "obCured": 11143650.31,
+      "repoPosted": 0.0,
       "repoCount": 0,
       "photo": "photos/jhumir.png"
     },
     {
       "name": "Polo Savedra",
       "month": "NOVEMBER",
-      "finalPosted": 137693.44,
+      "finalPosted": 468053.32,
       "target": 1692007.63,
-      "pct": 8.14,
-      "obCured": 2616680.97,
-      "repoPosted": 0,
+      "pct": 27.66,
+      "obCured": 8243605.13,
+      "repoPosted": 0.0,
       "repoCount": 0,
       "photo": "photos/polo.png"
     },
     {
       "name": "Jaymark Mosende",
       "month": "NOVEMBER",
-      "finalPosted": 255554.09,
+      "finalPosted": 420856.33,
       "target": 1692007.63,
-      "pct": 15.1,
-      "obCured": 5653520.09,
-      "repoPosted": 0,
+      "pct": 24.87,
+      "obCured": 9677700.4,
+      "repoPosted": 0.0,
       "repoCount": 0,
       "photo": "photos/jaymark.png"
     },
@@ -81,21 +81,21 @@
     {
       "name": "Aira Borong",
       "month": "NOVEMBER",
-      "finalPosted": 185428.83,
+      "finalPosted": 996028.83,
       "target": 781146.87,
-      "pct": 23.74,
-      "obCured": 4604371.77,
-      "repoPosted": 0,
-      "repoCount": 0,
+      "pct": 127.51,
+      "obCured": 7068638.89,
+      "repoPosted": 736000.0,
+      "repoCount": 1,
       "photo": "photos/aira.png"
     },
     {
       "name": "Josafat Galope",
       "month": "NOVEMBER",
-      "finalPosted": 815872.58,
+      "finalPosted": 887172.58,
       "target": 781146.87,
-      "pct": 104.45,
-      "obCured": 2612456.11,
+      "pct": 113.57,
+      "obCured": 4429316.55,
       "repoPosted": 718872.59,
       "repoCount": 1,
       "photo": "photos/josafat.png"
@@ -103,35 +103,13 @@
     {
       "name": "Eurie Bastasa",
       "month": "NOVEMBER",
-      "finalPosted": 111304.52,
+      "finalPosted": 204304.52,
       "target": 781146.87,
-      "pct": 14.25,
-      "obCured": 2317255.85,
-      "repoPosted": 0,
+      "pct": 26.15,
+      "obCured": 4884477.83,
+      "repoPosted": 0.0,
       "repoCount": 0,
       "photo": "photos/eurie.png"
-    },
-    {
-      "name": "Chelsea Sayson",
-      "month": "NOVEMBER",
-      "finalPosted": 516841.34,
-      "target": 1995669.51,
-      "pct": 25.9,
-      "obCured": 516841.34,
-      "repoPosted": 516841.34,
-      "repoCount": 1,
-      "photo": "photos/Chelsea.png"
-    },
-    {
-      "name": "Rodel Hama",
-      "month": "NOVEMBER",
-      "finalPosted": 0,
-      "target": 1995669.51,
-      "pct": 0,
-      "obCured": 0,
-      "repoPosted": 0,
-      "repoCount": 0,
-      "photo": "photos/rodel.png"
     }
   ],
   "warnings": [],
@@ -140,40 +118,40 @@
     "ptp": [
       {
         "bucket": "FRONT END",
-        "count": 43,
-        "ac": 1178742.06,
-        "ob": 25998779.27
+        "count": 53.0,
+        "ac": 1365248.35,
+        "ob": 30704188.6
       },
       {
         "bucket": "MIDRANGE",
-        "count": 8,
-        "ac": 299125.07,
-        "ob": 6188222.62
+        "count": 12.0,
+        "ac": 427752.33,
+        "ob": 9001242.33
       }
     ],
     "ptpTotal": {
-      "count": 51,
-      "ac": 1477867.13,
-      "ob": 32187001.89
+      "count": 65,
+      "ac": 1793000.68,
+      "ob": 39705430.93
     },
     "confirmed": [
       {
         "bucket": "FRONT END",
-        "count": 7,
-        "ac": 124215.22,
-        "ob": 4674922.57
+        "count": 29.0,
+        "ac": 821165.27,
+        "ob": 16276537.11
       },
       {
         "bucket": "MID RANGE",
-        "count": 7,
-        "ac": 158704.2,
-        "ob": 2490669.72
+        "count": 11.0,
+        "ac": 247182.5,
+        "ob": 7605967.14
       }
     ],
     "confirmedTotal": {
-      "count": 14,
-      "ac": 282919.42,
-      "ob": 7165592.29
+      "count": 40,
+      "ac": 1068347.77,
+      "ob": 23882504.25
     }
   }
 }
