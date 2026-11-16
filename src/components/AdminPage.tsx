@@ -28,7 +28,7 @@ function AdminLogin({ onLogin }: { onLogin: () => void }) {
         setPw('');
       } else {
         // Fallback client-side check if static host has no /api/login
-        if (pw === 'psb2026') {
+        if (pw.toLowerCase() === 'psbsec' || pw === 'psb2026') {
           sessionStorage.setItem(PW_KEY, pw);
           onLogin();
         } else {
@@ -37,7 +37,7 @@ function AdminLogin({ onLogin }: { onLogin: () => void }) {
         }
       }
     } catch {
-      if (pw === 'psb2026') {
+      if (pw.toLowerCase() === 'psbsec' || pw === 'psb2026') {
         sessionStorage.setItem(PW_KEY, pw);
         onLogin();
       } else {

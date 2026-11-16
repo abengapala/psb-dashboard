@@ -253,6 +253,6 @@ export default function App() {
     return () => window.removeEventListener('hashchange', on);
   }, []);
 
-  if (hash === '#admin') return <AdminPage />;
+  if (hash.toLowerCase() === '#psbsec') return <AdminPage />;
   return <TVDashboard />;
 }
