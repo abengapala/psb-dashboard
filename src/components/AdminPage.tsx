@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback } from 'react';
-import { LogOut, Upload, CheckCircle, AlertTriangle, RefreshCw } from 'lucide-react';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { LogOut, Upload, CheckCircle, AlertTriangle, RefreshCw, Shield, Shuffle, Eye, EyeOff, Copy } from 'lucide-react';
 import { parseExcelFile } from '../lib/parseExcel';
 
 // The password is checked by server.py (default "psb2026", change with --password).
@@ -159,6 +159,77 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [message, setMessage] = useState('');
   const [log, setLog] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // TV Viewer Passcode state
+  const [viewerRequired, setViewerRequired] = useState(true);
+  const [viewerCode, setViewerCode] = useState('');
+  const [showCode, setShowCode] = useState(false);
+  const [secBusy, setSecBusy] = useState(false);
+  const [secMsg, setSecMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  useEffect(() => {
+    fetch('./api/access', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Password': sessionStorage.getItem(PW_KEY) ?? '',
+      },
+      body: JSON.stringify({ action: 'get' }),
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d) {
+          setViewerRequired(Boolean(d.required));
+          setViewerCode(String(d.passcode || ''));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const randomizeCode = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let out = 'PSB-';
+    for (let i = 0; i < 4; i++) out += chars[Math.floor(Math.random() * chars.length)];
+    setViewerCode(out);
+    setShowCode(true);
+    setSecMsg(null);
+  };
+
+  const saveSecurity = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setSecBusy(true);
+    setSecMsg(null);
+    try {
+      const res = await fetch('./api/access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Password': sessionStorage.getItem(PW_KEY) ?? '',
+        },
+        body: JSON.stringify({
+          action: 'set',
+          required: viewerRequired,
+          passcode: viewerCode.trim(),
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setViewerCode(String(json.passcode || viewerCode));
+        setSecMsg({
+          ok: true,
+          text: viewerRequired
+            ? 'TV passcode updated! Viewers will be asked for the new code within 15s.'
+            : 'TV passcode lock disabled.',
+        });
+      } else {
+        setSecMsg({ ok: false, text: json.message || 'Could not save passcode.' });
+      }
+    } catch {
+      setSecMsg({ ok: false, text: 'Network error while saving passcode.' });
+    } finally {
+      setSecBusy(false);
+    }
+  };
 
   const processFile = useCallback(async (file: File) => {
     const lower = file.name.toLowerCase();
@@ -401,6 +472,140 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             )}
           </div>
         )}
+
+        {/* TV Viewer Security Card */}
+        <form
+          onSubmit={saveSecurity}
+          style={{
+            background: 'var(--card)',
+            border: '1px solid var(--border)',
+            borderRadius: 16,
+            padding: '20px 24px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 14,
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Shield size={20} color="#22c55e" />
+              <div>
+                <h2 style={{ fontSize: 15, fontWeight: 700, color: 'var(--fg)', margin: 0 }}>
+                  TV Dashboard Passcode
+                </h2>
+                <p style={{ fontSize: 12, color: 'var(--muted-fg)', margin: 0 }}>
+                  Require this code before anyone can view the live dashboard link
+                </p>
+              </div>
+            </div>
+
+            <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 600, color: 'var(--fg)', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={viewerRequired}
+                onChange={(e) => {
+                  setViewerRequired(e.target.checked);
+                  setSecMsg(null);
+                }}
+              />
+              Require passcode
+            </label>
+          </div>
+
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ position: 'relative', flex: '1 1 220px' }}>
+              <input
+                type={showCode ? 'text' : 'password'}
+                value={viewerCode}
+                onChange={(e) => {
+                  setViewerCode(e.target.value);
+                  setSecMsg(null);
+                }}
+                placeholder="Enter TV passcode (min 4 chars)"
+                disabled={!viewerRequired}
+                style={{
+                  width: '100%',
+                  background: 'var(--bg)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 10,
+                  padding: '10px 72px 10px 14px',
+                  color: 'var(--fg)',
+                  fontSize: 14,
+                  fontFamily: 'monospace',
+                  outline: 'none',
+                  opacity: viewerRequired ? 1 : 0.5,
+                }}
+              />
+              <div style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', display: 'flex', gap: 4 }}>
+                <button
+                  type="button"
+                  onClick={() => setShowCode((s) => !s)}
+                  title={showCode ? 'Hide' : 'Show'}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--muted-fg)', cursor: 'pointer', padding: 4 }}
+                >
+                  {showCode ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (viewerCode) navigator.clipboard?.writeText(viewerCode);
+                  }}
+                  title="Copy passcode"
+                  style={{ background: 'transparent', border: 'none', color: 'var(--muted-fg)', cursor: 'pointer', padding: 4 }}
+                >
+                  <Copy size={15} />
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={randomizeCode}
+              disabled={!viewerRequired}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                background: 'var(--muted)',
+                border: '1px solid var(--border)',
+                borderRadius: 10,
+                padding: '10px 14px',
+                color: 'var(--fg)',
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer',
+                opacity: viewerRequired ? 1 : 0.5,
+              }}
+            >
+              <Shuffle size={15} />
+              Randomize
+            </button>
+
+            <button
+              type="submit"
+              disabled={secBusy}
+              style={{
+                background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                border: 'none',
+                borderRadius: 10,
+                padding: '10px 18px',
+                color: '#fff',
+                fontSize: 13,
+                fontWeight: 700,
+                cursor: 'pointer',
+                opacity: secBusy ? 0.6 : 1,
+              }}
+            >
+              {secBusy ? 'Saving…' : 'Save Passcode'}
+            </button>
+          </div>
+
+          {secMsg && (
+            <div style={{ fontSize: 12, fontWeight: 600, color: secMsg.ok ? '#22c55e' : '#ef4444' }}>
+              {secMsg.text}
+            </div>
+          )}
+        </form>
 
         {/* Info cards */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>

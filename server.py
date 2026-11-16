@@ -378,9 +378,45 @@ def make_handler(app: App):
             return super().translate_path(path)
 
         def end_headers(self):
-            if self.path.split("?", 1)[0].endswith((".json", ".html", "/")):
+            if self.path.split("?", 1)[0].endswith((".json", ".html", "/")) or self.path.startswith("/api/"):
                 self.send_header("Cache-Control", "no-store")
             super().end_headers()
+
+        def _read_access(self):
+            for p in (HERE / "public" / "access.json", app.dist / "access.json"):
+                if p.exists():
+                    try:
+                        return json.loads(p.read_text(encoding="utf-8"))
+                    except Exception:
+                        pass
+            return {"required": True, "passcode": "PSB-7492", "version": "1"}
+
+        def _write_access(self, cfg):
+            raw = json.dumps(cfg, indent=2) + "\n"
+            for p in (HERE / "public" / "access.json", app.dist / "access.json"):
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text(raw, encoding="utf-8")
+
+        def _push_access_to_github(self):
+            import subprocess
+            if not (HERE / ".git").exists():
+                return
+            try:
+                subprocess.run(["git", "-C", str(HERE), "add", "public/access.json"], check=False, capture_output=True)
+                diff = subprocess.run(["git", "-C", str(HERE), "diff", "--cached", "--quiet"], check=False)
+                if diff.returncode != 0:
+                    subprocess.run(["git", "-C", str(HERE), "commit", "-m", "Update TV viewer passcode"], check=False, capture_output=True)
+                    subprocess.run(["git", "-C", str(HERE), "pull", "--rebase", "-X", "ours", "origin", "main"], check=False, capture_output=True)
+                    subprocess.run(["git", "-C", str(HERE), "push", "origin", "main"], check=False, capture_output=True)
+            except Exception as e:
+                log(f"access git sync error: {e}")
+
+        def do_GET(self):
+            route = self.path.split("?", 1)[0]
+            if route == "/api/access":
+                cfg = self._read_access()
+                return self._json(200, {"required": bool(cfg.get("required", True)), "version": str(cfg.get("version", "1"))})
+            return super().do_GET()
 
         def _json(self, code, obj):
             body = json.dumps(obj).encode("utf-8")
@@ -410,6 +446,53 @@ def make_handler(app: App):
                     return self._json(200, {"ok": True})
                 time.sleep(1)  # slow down guessing
                 return self._json(401, {"ok": False, "message": "Incorrect password."})
+
+            if route == "/api/access":
+                try:
+                    payload = json.loads(body or b"{}")
+                except Exception:
+                    payload = {}
+                action = payload.get("action", "verify")
+                if action == "verify":
+                    cfg = self._read_access()
+                    if not cfg.get("required", True):
+                        return self._json(200, {"ok": True, "version": str(cfg.get("version", "1"))})
+                    entered = str(payload.get("passcode", "")).strip()
+                    if entered and entered == str(cfg.get("passcode", "")):
+                        return self._json(200, {"ok": True, "version": str(cfg.get("version", "1"))})
+                    time.sleep(0.5)
+                    return self._json(401, {"ok": False, "message": "Incorrect TV passcode."})
+
+                if not self._authed():
+                    return self._json(401, {"message": "Admin authentication required."})
+
+                if action == "get":
+                    cfg = self._read_access()
+                    return self._json(200, {
+                        "required": bool(cfg.get("required", True)),
+                        "passcode": str(cfg.get("passcode", "")),
+                        "version": str(cfg.get("version", "1")),
+                    })
+
+                if action == "set":
+                    next_code = str(payload.get("passcode", "")).strip()
+                    next_req = bool(payload.get("required", True))
+                    if next_req and len(next_code) < 4:
+                        return self._json(400, {"message": "Passcode must be at least 4 characters."})
+                    cfg = self._read_access()
+                    next_cfg = {
+                        "required": next_req,
+                        "passcode": next_code or str(cfg.get("passcode", "PSB-7492")),
+                        "version": str(int(time.time() * 1000)),
+                    }
+                    self._write_access(next_cfg)
+                    threading.Thread(
+                        target=self._push_access_to_github,
+                        daemon=True,
+                    ).start()
+                    return self._json(200, {"ok": True, **next_cfg})
+
+                return self._json(400, {"message": "Unknown action"})
 
             if route == "/upload":
                 if not self._authed():

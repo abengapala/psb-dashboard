@@ -10,6 +10,7 @@ import { Footer } from './components/Footer';
 import { MilestoneToast } from './components/MilestoneToast';
 import { AdminPage } from './components/AdminPage';
 import { EodPage } from './components/EodPage';
+import { ViewerGate } from './components/ViewerGate';
 import { EASE } from './lib/format';
 
 const ROTATE_MS = 20_000;
@@ -254,5 +255,9 @@ export default function App() {
   }, []);
 
   if (hash.toLowerCase() === '#psbsec') return <AdminPage />;
-  return <TVDashboard />;
+  return (
+    <ViewerGate>
+      <TVDashboard />
+    </ViewerGate>
+  );
 }
