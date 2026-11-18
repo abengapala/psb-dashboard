@@ -268,10 +268,20 @@ export async function parseExcelFile(file: File): Promise<{ data: Data; summary:
   const warnings: string[] = [];
   const unknown = new Set<string>();
   const hasOkBp = 'OK / BP' in col;
+  const acctMap: Record<string, string> = {};
+  const colAcct = col['ACCOUNT NUMBER'];
 
   ptp.slice(hi + 1).forEach((r, idx) => {
     const xlRow = hi + 2 + idx;
     if (!Array.isArray(r)) return;
+    if (colAcct !== undefined) {
+      const acct = cleanName(r[colAcct]).replace(/[-\s]/g, '');
+      const ag = cleanName(r[col['AGENT NAME']]);
+      if (acct && ag) {
+        acctMap[acct] = ag;
+        if (acct.length > 10) acctMap[acct.slice(-10)] = ag;
+      }
+    }
     if (cleanName(r[col['MONTH']]).toUpperCase() !== month) return;
     if (cleanName(r[col['ACCOUNT STATUS']]).toUpperCase() !== 'KEPT') return;
     if (hasOkBp && cleanName(r[col['OK / BP']]).toUpperCase() !== 'OK') return;
@@ -356,6 +366,11 @@ export async function parseExcelFile(file: File): Promise<{ data: Data; summary:
   const obPctAchieved = obTargetTotal ? Math.round((obCuredTotal / obTargetTotal) * 10000) / 100 : 0;
 
   const eod = parseEod(wb, ptp);
+  try {
+    localStorage.setItem('psb_acct_agent_map', JSON.stringify(acctMap));
+  } catch {
+    // ignore quota errors
+  }
   const fileTime = new Date(file.lastModified || Date.now()).toISOString().slice(0, 19);
   const genTime = new Date().toISOString().slice(0, 19);
 

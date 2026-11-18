@@ -135,10 +135,19 @@ export async function parseFieldExcelFile(
   const colNewBank = hdr.findIndex((h) => h === 'NEW BANK NAME');
   const colOb = hdr.findIndex((h) => h === 'OB' || h.includes('OUTSTANDING'));
   const colDate = hdr.findIndex((h) => h.includes('FV RESULT DATE') || h === 'DATE');
+  const colAcct = hdr.findIndex((h) => h.includes('ACCOUNT NUMBER') || h === 'ACCOUNT');
   const colAddrRes =
     hdr.findIndex((h) => h.includes('ADDRESS') && h.includes('FV RESULT')) >= 0
       ? hdr.findIndex((h) => h.includes('ADDRESS') && h.includes('FV RESULT'))
       : hdr.findIndex((h) => h === 'STATUS' || h.includes('FV RESULT'));
+
+  let acctMap: Record<string, string> = {};
+  try {
+    const rawMap = localStorage.getItem('psb_acct_agent_map');
+    if (rawMap) acctMap = JSON.parse(rawMap) as Record<string, string>;
+  } catch {
+    acctMap = {};
+  }
 
   const areaMap = new Map<string, FieldAreaStat>();
   const agentMap = new Map<string, FieldAgentStat>();
@@ -196,7 +205,12 @@ export async function parseFieldExcelFile(
     aStat.ob = Math.round((aStat.ob + ob) * 100) / 100;
 
     if (rawTag) {
-      const resolved = resolveFieldAgent(rawTag);
+      let resolved = resolveFieldAgent(rawTag);
+      if ((resolved.key === 'BCRM' || resolved.key === 'UNASSIGNED') && colAcct >= 0) {
+        const acctClean = clean(r[colAcct]).replace(/[-\s]/g, '');
+        const hit = acctMap[acctClean] || (acctClean.length > 10 ? acctMap[acctClean.slice(-10)] : undefined);
+        if (hit) resolved = resolveFieldAgent(hit);
+      }
       const agKey = resolved.name;
       let agStat = agentMap.get(agKey);
       if (!agStat) {

@@ -101,7 +101,41 @@ class App:
         return out
 
     @staticmethod
-    def _read_field(xlsx: Path):
+    def _build_acct_map(xlsx: Path | None) -> dict[str, str]:
+        """Build account_number -> agent_name map from PTP MONITORING 2026 & CIS sheets."""
+        if not xlsx or not xlsx.exists():
+            return {}
+        from openpyxl import load_workbook
+        out: dict[str, str] = {}
+        with tempfile.TemporaryDirectory() as tmp:
+            copy = Path(tmp) / "acct.xlsx"
+            shutil.copy2(xlsx, copy)
+            wb = load_workbook(copy, data_only=True, read_only=True)
+            try:
+                for sname in ("CIS", "PTP MONITORING 2026"):
+                    if sname not in wb.sheetnames:
+                        continue
+                    ws = wb[sname]
+                    ws.reset_dimensions()
+                    rows = ws.iter_rows(values_only=True)
+                    hdr = [str(c or "").strip().upper() for c in next(rows, ())]
+                    ai = next((j for j, h in enumerate(hdr) if "ACCOUNT" in h), -1)
+                    agi = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
+                    if ai < 0 or agi < 0:
+                        continue
+                    for r in rows:
+                        a = str(r[ai] if ai < len(r) and r[ai] is not None else "").strip().replace("-", "").replace(" ", "")
+                        ag = " ".join(str(r[agi] if agi < len(r) and r[agi] is not None else "").split())
+                        if a and ag:
+                            out[a] = ag
+                            if len(a) > 10:
+                                out[a[-10:]] = ag
+            finally:
+                wb.close()
+        return out
+
+    @staticmethod
+    def _read_field(xlsx: Path, acct_map: dict[str, str] | None = None):
         """Parse PSB FIELD RESULT*.xlsx (Not Cancel sheet, or raw sheet filtered for PSB, excluding CANCEL)."""
         from openpyxl import load_workbook
         tag_map = {
@@ -205,6 +239,7 @@ class App:
         col_new_bank = next((j for j, h in enumerate(hdr) if h == "NEW BANK NAME"), -1)
         col_ob = next((j for j, h in enumerate(hdr) if h == "OB" or "OUTSTANDING" in h), -1)
         col_date = next((j for j, h in enumerate(hdr) if "FV RESULT DATE" in h or h == "DATE"), -1)
+        col_acct = next((j for j, h in enumerate(hdr) if "ACCOUNT NUMBER" in h or h == "ACCOUNT"), -1)
         col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h and "FV RESULT" in h), -1)
         if col_res < 0:
             col_res = next((j for j, h in enumerate(hdr) if h == "STATUS" or "FV RESULT" in h), -1)
@@ -261,6 +296,11 @@ class App:
 
             if raw_tag:
                 ag_tag, ag_name, ag_photo = resolve_agent(raw_tag)
+                if ag_tag in ("BCRM", "UNASSIGNED") and acct_map and 0 <= col_acct < len(r) and r[col_acct]:
+                    acct_clean = str(r[col_acct]).strip().replace("-", "").replace(" ", "")
+                    hit = acct_map.get(acct_clean) or (acct_map.get(acct_clean[-10:]) if len(acct_clean) > 10 else None)
+                    if hit:
+                        ag_tag, ag_name, ag_photo = resolve_agent(hit)
                 agstat = agents.setdefault(
                     ag_name,
                     {"tag": ag_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
@@ -292,7 +332,13 @@ class App:
     def rebuild_field(self, field_xlsx: Path):
         """Update only data['field'] in data.json from a Field Result Excel file."""
         with self.lock:
-            field = self._read_field(field_xlsx)
+            mon_arg = getattr(self.args, "xlsx", None)
+            mon_xlsx = find_latest_xlsx(mon_arg) if mon_arg else None
+            if not mon_xlsx or not mon_xlsx.exists():
+                ups = sorted(self.uploads.glob("*.xlsx"), key=lambda f: f.stat().st_mtime, reverse=True)
+                mon_xlsx = ups[0] if ups else None
+            acct_map = self._build_acct_map(mon_xlsx)
+            field = self._read_field(field_xlsx, acct_map=acct_map)
             if not field:
                 return False
             for p in (self.dist / "data.json", HERE / "public" / "data.json"):
@@ -352,7 +398,41 @@ class App:
                 return out
 
     @staticmethod
-    def _read_field(xlsx: Path):
+    def _build_acct_map(xlsx: Path | None) -> dict[str, str]:
+        """Build account_number -> agent_name map from PTP MONITORING 2026 & CIS sheets."""
+        if not xlsx or not xlsx.exists():
+            return {}
+        from openpyxl import load_workbook
+        out: dict[str, str] = {}
+        with tempfile.TemporaryDirectory() as tmp:
+            copy = Path(tmp) / "acct.xlsx"
+            shutil.copy2(xlsx, copy)
+            wb = load_workbook(copy, data_only=True, read_only=True)
+            try:
+                for sname in ("CIS", "PTP MONITORING 2026"):
+                    if sname not in wb.sheetnames:
+                        continue
+                    ws = wb[sname]
+                    ws.reset_dimensions()
+                    rows = ws.iter_rows(values_only=True)
+                    hdr = [str(c or "").strip().upper() for c in next(rows, ())]
+                    ai = next((j for j, h in enumerate(hdr) if "ACCOUNT" in h), -1)
+                    agi = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
+                    if ai < 0 or agi < 0:
+                        continue
+                    for r in rows:
+                        a = str(r[ai] if ai < len(r) and r[ai] is not None else "").strip().replace("-", "").replace(" ", "")
+                        ag = " ".join(str(r[agi] if agi < len(r) and r[agi] is not None else "").split())
+                        if a and ag:
+                            out[a] = ag
+                            if len(a) > 10:
+                                out[a[-10:]] = ag
+            finally:
+                wb.close()
+        return out
+
+    @staticmethod
+    def _read_field(xlsx: Path, acct_map: dict[str, str] | None = None):
         """Parse PSB FIELD RESULT*.xlsx (Not Cancel sheet, or raw sheet filtered for PSB, excluding CANCEL)."""
         from openpyxl import load_workbook
         tag_map = {
@@ -456,6 +536,7 @@ class App:
         col_new_bank = next((j for j, h in enumerate(hdr) if h == "NEW BANK NAME"), -1)
         col_ob = next((j for j, h in enumerate(hdr) if h == "OB" or "OUTSTANDING" in h), -1)
         col_date = next((j for j, h in enumerate(hdr) if "FV RESULT DATE" in h or h == "DATE"), -1)
+        col_acct = next((j for j, h in enumerate(hdr) if "ACCOUNT NUMBER" in h or h == "ACCOUNT"), -1)
         col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h and "FV RESULT" in h), -1)
         if col_res < 0:
             col_res = next((j for j, h in enumerate(hdr) if h == "STATUS" or "FV RESULT" in h), -1)
@@ -512,6 +593,11 @@ class App:
 
             if raw_tag:
                 ag_tag, ag_name, ag_photo = resolve_agent(raw_tag)
+                if ag_tag in ("BCRM", "UNASSIGNED") and acct_map and 0 <= col_acct < len(r) and r[col_acct]:
+                    acct_clean = str(r[col_acct]).strip().replace("-", "").replace(" ", "")
+                    hit = acct_map.get(acct_clean) or (acct_map.get(acct_clean[-10:]) if len(acct_clean) > 10 else None)
+                    if hit:
+                        ag_tag, ag_name, ag_photo = resolve_agent(hit)
                 agstat = agents.setdefault(
                     ag_name,
                     {"tag": ag_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
@@ -543,7 +629,13 @@ class App:
     def rebuild_field(self, field_xlsx: Path):
         """Update only data['field'] in data.json from a Field Result Excel file."""
         with self.lock:
-            field = self._read_field(field_xlsx)
+            mon_arg = getattr(self.args, "xlsx", None)
+            mon_xlsx = find_latest_xlsx(mon_arg) if mon_arg else None
+            if not mon_xlsx or not mon_xlsx.exists():
+                ups = sorted(self.uploads.glob("*.xlsx"), key=lambda f: f.stat().st_mtime, reverse=True)
+                mon_xlsx = ups[0] if ups else None
+            acct_map = self._build_acct_map(mon_xlsx)
+            field = self._read_field(field_xlsx, acct_map=acct_map)
             if not field:
                 return False
             for p in (self.dist / "data.json", HERE / "public" / "data.json"):
@@ -676,7 +768,41 @@ class App:
         return out
 
     @staticmethod
-    def _read_field(xlsx: Path):
+    def _build_acct_map(xlsx: Path | None) -> dict[str, str]:
+        """Build account_number -> agent_name map from PTP MONITORING 2026 & CIS sheets."""
+        if not xlsx or not xlsx.exists():
+            return {}
+        from openpyxl import load_workbook
+        out: dict[str, str] = {}
+        with tempfile.TemporaryDirectory() as tmp:
+            copy = Path(tmp) / "acct.xlsx"
+            shutil.copy2(xlsx, copy)
+            wb = load_workbook(copy, data_only=True, read_only=True)
+            try:
+                for sname in ("CIS", "PTP MONITORING 2026"):
+                    if sname not in wb.sheetnames:
+                        continue
+                    ws = wb[sname]
+                    ws.reset_dimensions()
+                    rows = ws.iter_rows(values_only=True)
+                    hdr = [str(c or "").strip().upper() for c in next(rows, ())]
+                    ai = next((j for j, h in enumerate(hdr) if "ACCOUNT" in h), -1)
+                    agi = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
+                    if ai < 0 or agi < 0:
+                        continue
+                    for r in rows:
+                        a = str(r[ai] if ai < len(r) and r[ai] is not None else "").strip().replace("-", "").replace(" ", "")
+                        ag = " ".join(str(r[agi] if agi < len(r) and r[agi] is not None else "").split())
+                        if a and ag:
+                            out[a] = ag
+                            if len(a) > 10:
+                                out[a[-10:]] = ag
+            finally:
+                wb.close()
+        return out
+
+    @staticmethod
+    def _read_field(xlsx: Path, acct_map: dict[str, str] | None = None):
         """Parse PSB FIELD RESULT*.xlsx (Not Cancel sheet, or raw sheet filtered for PSB, excluding CANCEL)."""
         from openpyxl import load_workbook
         tag_map = {
@@ -780,6 +906,7 @@ class App:
         col_new_bank = next((j for j, h in enumerate(hdr) if h == "NEW BANK NAME"), -1)
         col_ob = next((j for j, h in enumerate(hdr) if h == "OB" or "OUTSTANDING" in h), -1)
         col_date = next((j for j, h in enumerate(hdr) if "FV RESULT DATE" in h or h == "DATE"), -1)
+        col_acct = next((j for j, h in enumerate(hdr) if "ACCOUNT NUMBER" in h or h == "ACCOUNT"), -1)
         col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h and "FV RESULT" in h), -1)
         if col_res < 0:
             col_res = next((j for j, h in enumerate(hdr) if h == "STATUS" or "FV RESULT" in h), -1)
@@ -836,6 +963,11 @@ class App:
 
             if raw_tag:
                 ag_tag, ag_name, ag_photo = resolve_agent(raw_tag)
+                if ag_tag in ("BCRM", "UNASSIGNED") and acct_map and 0 <= col_acct < len(r) and r[col_acct]:
+                    acct_clean = str(r[col_acct]).strip().replace("-", "").replace(" ", "")
+                    hit = acct_map.get(acct_clean) or (acct_map.get(acct_clean[-10:]) if len(acct_clean) > 10 else None)
+                    if hit:
+                        ag_tag, ag_name, ag_photo = resolve_agent(hit)
                 agstat = agents.setdefault(
                     ag_name,
                     {"tag": ag_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
@@ -867,7 +999,13 @@ class App:
     def rebuild_field(self, field_xlsx: Path):
         """Update only data['field'] in data.json from a Field Result Excel file."""
         with self.lock:
-            field = self._read_field(field_xlsx)
+            mon_arg = getattr(self.args, "xlsx", None)
+            mon_xlsx = find_latest_xlsx(mon_arg) if mon_arg else None
+            if not mon_xlsx or not mon_xlsx.exists():
+                ups = sorted(self.uploads.glob("*.xlsx"), key=lambda f: f.stat().st_mtime, reverse=True)
+                mon_xlsx = ups[0] if ups else None
+            acct_map = self._build_acct_map(mon_xlsx)
+            field = self._read_field(field_xlsx, acct_map=acct_map)
             if not field:
                 return False
             for p in (self.dist / "data.json", HERE / "public" / "data.json"):
@@ -920,7 +1058,7 @@ class App:
                 # Preserve or refresh Field Visit data if a PSB FIELD RESULT file is in Downloads
                 field_xlsx = find_latest_field_xlsx(xlsx.parent)
                 if field_xlsx and field_xlsx.exists():
-                    field = self._read_field(field_xlsx)
+                    field = self._read_field(field_xlsx, acct_map=self._build_acct_map(xlsx))
                     if field is not None:
                         data["field"] = field
                         changed = True
