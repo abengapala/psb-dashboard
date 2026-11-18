@@ -426,18 +426,6 @@
         "photo": "photos/polo.png"
       },
       {
-        "tag": "BCRM",
-        "name": "BCRM",
-        "total": 8,
-        "positive": 4,
-        "pos": 3,
-        "ptp": 0,
-        "repo": 1,
-        "neg": 4,
-        "ob": 3823768.55,
-        "photo": null
-      },
-      {
         "tag": "JMOSENDE",
         "name": "Jaymark Mosende",
         "total": 5,
@@ -519,18 +507,6 @@
         "repo": 0,
         "neg": 2,
         "ob": 280544.0,
-        "photo": null
-      },
-      {
-        "tag": "UNASSIGNED",
-        "name": "Unassigned",
-        "total": 2,
-        "positive": 0,
-        "pos": 0,
-        "ptp": 0,
-        "repo": 0,
-        "neg": 2,
-        "ob": 1295647.1,
         "photo": null
       }
     ]

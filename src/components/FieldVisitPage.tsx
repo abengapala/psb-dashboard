@@ -13,6 +13,10 @@ const CAP: React.CSSProperties = {
 };
 
 export function FieldVisitPage({ field, entered }: { field: FieldReport; entered: boolean }) {
+  const taggedAgents = field.agents.filter(
+    (ag) => ag.tag !== 'BCRM' && ag.tag !== 'UNASSIGNED' && ag.name.toUpperCase() !== 'BCRM' && ag.name.toUpperCase() !== 'UNASSIGNED',
+  );
+
   return (
     <div
       style={{
@@ -296,16 +300,16 @@ export function FieldVisitPage({ field, entered }: { field: FieldReport; entered
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontSize: 'clamp(12px, 0.9vw, 16px)', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              {field.agents.length > 0 ? 'By Agent' : 'Result & Top OB'}
+              {taggedAgents.length > 0 ? 'By Agent' : 'Result & Top OB'}
             </span>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(9px, 0.68vw, 12px)', color: 'var(--t3)' }}>
-              {field.agents.length > 0 ? 'POSITIVE RATE' : 'PSB AUTO CURING'}
+              {taggedAgents.length > 0 ? 'POSITIVE RATE' : 'PSB AUTO CURING'}
             </span>
           </div>
 
           <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '0.5vh', overflow: 'hidden' }}>
-            {field.agents.length > 0 ? (
-              field.agents.slice(0, 9).map((ag) => {
+            {taggedAgents.length > 0 ? (
+              taggedAgents.slice(0, 9).map((ag) => {
                 const rate = ag.total > 0 ? Math.round((ag.positive / ag.total) * 100) : 0;
                 return (
                   <div

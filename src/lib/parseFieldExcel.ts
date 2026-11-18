@@ -211,30 +211,32 @@ export async function parseFieldExcelFile(
         const hit = acctMap[acctClean] || (acctClean.length > 10 ? acctMap[acctClean.slice(-10)] : undefined);
         if (hit) resolved = resolveFieldAgent(hit);
       }
-      const agKey = resolved.name;
-      let agStat = agentMap.get(agKey);
-      if (!agStat) {
-        agStat = {
-          tag: resolved.key,
-          name: resolved.name,
-          total: 0,
-          positive: 0,
-          pos: 0,
-          ptp: 0,
-          repo: 0,
-          neg: 0,
-          ob: 0,
-          photo: resolved.photo,
-        };
-        agentMap.set(agKey, agStat);
+      if (resolved.key !== 'BCRM' && resolved.key !== 'UNASSIGNED') {
+        const agKey = resolved.name;
+        let agStat = agentMap.get(agKey);
+        if (!agStat) {
+          agStat = {
+            tag: resolved.key,
+            name: resolved.name,
+            total: 0,
+            positive: 0,
+            pos: 0,
+            ptp: 0,
+            repo: 0,
+            neg: 0,
+            ob: 0,
+            photo: resolved.photo,
+          };
+          agentMap.set(agKey, agStat);
+        }
+        agStat.total += 1;
+        if (isPositive) agStat.positive += 1;
+        if (kind === 'POS') agStat.pos += 1;
+        else if (kind === 'PTP') agStat.ptp += 1;
+        else if (kind === 'REPO') agStat.repo += 1;
+        else if (kind === 'NEG') agStat.neg += 1;
+        agStat.ob = Math.round((agStat.ob + ob) * 100) / 100;
       }
-      agStat.total += 1;
-      if (isPositive) agStat.positive += 1;
-      if (kind === 'POS') agStat.pos += 1;
-      else if (kind === 'PTP') agStat.ptp += 1;
-      else if (kind === 'REPO') agStat.repo += 1;
-      else if (kind === 'NEG') agStat.neg += 1;
-      agStat.ob = Math.round((agStat.ob + ob) * 100) / 100;
     }
   }
 
