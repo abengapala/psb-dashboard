@@ -175,5 +175,212 @@
       "ac": 1068347.77,
       "ob": 23882504.25
     }
+  },
+  "field": {
+    "asOf": "2026-11-12",
+    "total": 31,
+    "positive": 13,
+    "pos": 10,
+    "ptp": 2,
+    "repo": 1,
+    "neg": 18,
+    "positiveRate": 41.9,
+    "totalOb": 17228954.28,
+    "areas": [
+      {
+        "area": "ILOILO",
+        "total": 5,
+        "positive": 3,
+        "pos": 2,
+        "ptp": 1,
+        "repo": 0,
+        "neg": 2,
+        "ob": 1856151.0
+      },
+      {
+        "area": "QUEZON PROVINCE",
+        "total": 5,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 4,
+        "ob": 4297050.0
+      },
+      {
+        "area": "SOUTH",
+        "total": 4,
+        "positive": 0,
+        "pos": 0,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 4,
+        "ob": 2032411.0
+      },
+      {
+        "area": "CAMSUR",
+        "total": 3,
+        "positive": 3,
+        "pos": 2,
+        "ptp": 1,
+        "repo": 0,
+        "neg": 0,
+        "ob": 541853.34
+      },
+      {
+        "area": "DAVAO DEL NORTE",
+        "total": 3,
+        "positive": 0,
+        "pos": 0,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 3,
+        "ob": 1533489.0
+      },
+      {
+        "area": "ORIENTAL MINDORO",
+        "total": 2,
+        "positive": 2,
+        "pos": 2,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 0,
+        "ob": 916950.0
+      },
+      {
+        "area": "ZAMBOANGA DEL NORTE",
+        "total": 2,
+        "positive": 2,
+        "pos": 2,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 0,
+        "ob": 905788.0
+      },
+      {
+        "area": "LA UNION",
+        "total": 2,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 1,
+        "ob": 937668.0
+      },
+      {
+        "area": "PASIG/MARIKINA",
+        "total": 2,
+        "positive": 0,
+        "pos": 0,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 2,
+        "ob": 2505078.0
+      },
+      {
+        "area": "CAMANAVA",
+        "total": 1,
+        "positive": 1,
+        "pos": 0,
+        "ptp": 0,
+        "repo": 1,
+        "neg": 0,
+        "ob": 630045.52
+      },
+      {
+        "area": "BULACAN",
+        "total": 1,
+        "positive": 0,
+        "pos": 0,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 1,
+        "ob": 873016.42
+      },
+      {
+        "area": "BACOLOD",
+        "total": 1,
+        "positive": 0,
+        "pos": 0,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 1,
+        "ob": 199454.0
+      }
+    ],
+    "agents": [
+      {
+        "tag": "JSPENA",
+        "name": "Jhumir Peña",
+        "total": 13,
+        "positive": 4,
+        "pos": 4,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 9,
+        "ob": 8739982.0,
+        "photo": "photos/jhumir.png"
+      },
+      {
+        "tag": "PSAVEDRA",
+        "name": "Polo Savedra",
+        "total": 5,
+        "positive": 4,
+        "pos": 3,
+        "ptp": 1,
+        "repo": 0,
+        "neg": 1,
+        "ob": 2632450.0,
+        "photo": "photos/polo.png"
+      },
+      {
+        "tag": "CSAYSON",
+        "name": "Chelsea Sayson",
+        "total": 6,
+        "positive": 2,
+        "pos": 1,
+        "ptp": 1,
+        "repo": 0,
+        "neg": 4,
+        "ob": 3681646.76,
+        "photo": "photos/Chelsea.png"
+      },
+      {
+        "tag": "CJBCRUZ",
+        "name": "Charles Cruz",
+        "total": 4,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 3,
+        "ob": 839997.0,
+        "photo": "photos/charles.png"
+      },
+      {
+        "tag": "EBASTASA",
+        "name": "Eurie Bastasa",
+        "total": 2,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 1,
+        "ob": 704833.0,
+        "photo": "photos/eurie.png"
+      },
+      {
+        "tag": "ABORONG",
+        "name": "Aira Borong",
+        "total": 1,
+        "positive": 1,
+        "pos": 0,
+        "ptp": 0,
+        "repo": 1,
+        "neg": 0,
+        "ob": 630045.52,
+        "photo": "photos/aira.png"
+      }
+    ]
   }
 }

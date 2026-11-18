@@ -55,6 +55,15 @@ def log(msg):
 
 def load_generator(path: Path):
     if not path.exists():
+        for alt in (
+            DOWNLOADS / "Scripts & Code" / "update_dashboard.py",
+            HERE.parent / "update_dashboard.py",
+            HERE / "update_dashboard.py",
+        ):
+            if alt.exists():
+                path = alt
+                break
+    if not path.exists():
         sys.exit(f"update_dashboard.py not found at {path}  (use --script)")
     spec = importlib.util.spec_from_file_location("update_dashboard", path)
     mod = importlib.util.module_from_spec(spec)
@@ -261,7 +270,7 @@ class App:
                     p.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
             threading.Thread(target=self._push_to_github, args=(field_xlsx.name,), daemon=True).start()
             log(f"updated Field Visit Map: {field['total']} visits ({field['positive']} positive, {field['positiveRate']}%)")
-            return True[0], out[1]
+            return True
 
     @staticmethod
     def _read_eod(xlsx: Path):
