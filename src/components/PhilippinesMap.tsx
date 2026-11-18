@@ -24,150 +24,172 @@ function polyPath(coords: [number, number][]): string {
   );
 }
 
-// Simplified accurate geographic outlines of major Philippine islands
+// Detailed geographic outlines of the Philippine archipelago
 const ISLANDS: { name: string; coords: [number, number][] }[] = [
   {
     name: 'Luzon',
     coords: [
-      [18.55, 120.75], [18.5, 122.15], [17.7, 122.3], [16.5, 122.25], [15.7, 121.65],
-      [14.9, 121.6], [14.3, 121.95], [14.25, 122.75], [13.95, 123.5], [13.55, 124.05],
-      [13.0, 124.15], [12.55, 124.05], [12.75, 123.35], [13.45, 123.05], [13.85, 122.25],
-      [13.75, 121.4], [13.7, 120.9], [14.1, 120.6], [14.45, 120.95], [14.8, 120.25],
-      [15.4, 119.9], [16.15, 119.75], [16.4, 120.25], [17.0, 120.4], [17.6, 120.35],
-      [18.25, 120.55],
+      [18.62, 120.85], [18.55, 121.35], [18.35, 122.12], [17.9, 122.22], [17.35, 122.36],
+      [16.65, 122.3], [16.15, 122.02], [15.78, 121.62], [15.25, 121.48], [14.85, 121.62],
+      [14.42, 121.7], [14.22, 122.25], [14.32, 122.75], [14.08, 123.02], [13.95, 123.58],
+      [13.78, 123.95], [13.38, 123.92], [13.02, 124.16], [12.55, 124.08], [12.58, 123.72],
+      [12.92, 123.38], [13.35, 123.28], [13.68, 122.92], [13.28, 122.58], [13.75, 122.22],
+      [13.92, 121.65], [13.72, 121.4], [13.64, 120.95], [13.98, 120.62], [14.25, 120.68],
+      [14.48, 120.96], [14.62, 120.96], [14.76, 120.52], [14.42, 120.48], [14.78, 120.24],
+      [15.32, 119.9], [15.98, 119.78], [16.32, 119.92], [16.08, 120.22], [16.58, 120.32],
+      [17.12, 120.42], [17.58, 120.36], [18.08, 120.48], [18.45, 120.58],
     ],
+  },
+  {
+    name: 'Catanduanes',
+    coords: [[14.08, 124.22], [13.92, 124.42], [13.55, 124.35], [13.6, 124.08], [13.95, 124.08]],
   },
   {
     name: 'Mindoro',
     coords: [
-      [13.52, 120.95], [13.2, 121.48], [12.45, 121.45], [12.2, 121.1], [12.6, 120.8], [13.25, 120.45],
+      [13.52, 120.95], [13.28, 121.42], [12.78, 121.52], [12.22, 121.35],
+      [12.22, 120.98], [12.68, 120.75], [13.25, 120.45],
     ],
+  },
+  {
+    name: 'Masbate',
+    coords: [[12.55, 123.22], [12.2, 123.92], [11.82, 124.05], [11.95, 123.58], [12.28, 123.22]],
   },
   {
     name: 'Palawan',
     coords: [
-      [11.45, 119.45], [11.2, 119.65], [10.3, 119.35], [9.4, 118.55], [8.35, 117.25],
-      [8.55, 117.1], [9.6, 118.3], [10.6, 119.05],
+      [11.48, 119.45], [11.15, 119.62], [10.65, 119.48], [10.12, 119.22],
+      [9.55, 118.68], [8.95, 118.02], [8.35, 117.24], [8.62, 117.08],
+      [9.25, 117.88], [9.95, 118.55], [10.68, 119.12],
     ],
   },
   {
     name: 'Panay',
     coords: [
-      [11.9, 122.05], [11.55, 123.1], [10.9, 122.95], [10.45, 122.05], [11.15, 122.0],
+      [11.92, 121.95], [11.68, 122.45], [11.55, 123.12], [11.12, 123.08],
+      [10.68, 122.58], [10.42, 122.02], [11.05, 121.98], [11.52, 122.02],
     ],
   },
   {
     name: 'Negros',
     coords: [
-      [10.95, 123.15], [10.85, 123.55], [9.9, 123.25], [9.05, 123.1], [9.25, 122.55], [10.2, 122.85],
+      [10.98, 123.12], [10.88, 123.52], [10.35, 123.38], [9.65, 123.18],
+      [9.04, 123.08], [9.18, 122.52], [9.85, 122.42], [10.45, 122.82],
     ],
   },
   {
     name: 'Cebu',
     coords: [
-      [11.25, 124.05], [10.5, 124.02], [9.45, 123.35], [9.65, 123.3], [10.55, 123.75], [11.15, 123.9],
+      [11.28, 124.02], [10.85, 124.04], [10.32, 123.96], [9.72, 123.56],
+      [9.42, 123.34], [9.62, 123.28], [10.22, 123.62], [10.82, 123.84], [11.15, 123.9],
     ],
   },
   {
     name: 'Bohol',
     coords: [
-      [10.15, 124.2], [9.95, 124.55], [9.55, 124.3], [9.6, 123.8], [9.95, 123.95],
+      [10.16, 124.18], [9.96, 124.58], [9.6, 124.38], [9.56, 123.82], [9.92, 123.88],
     ],
   },
   {
     name: 'Samar',
     coords: [
-      [12.55, 124.35], [12.35, 125.3], [11.3, 125.65], [11.05, 125.15], [11.7, 124.85], [12.2, 124.3],
+      [12.58, 124.35], [12.48, 125.12], [12.15, 125.48], [11.55, 125.55],
+      [11.02, 125.72], [11.12, 125.15], [11.65, 124.82], [12.15, 124.32],
     ],
   },
   {
     name: 'Leyte',
     coords: [
-      [11.55, 124.35], [11.35, 124.95], [10.15, 125.2], [10.05, 124.8], [10.75, 124.65],
+      [11.58, 124.34], [11.42, 124.92], [10.85, 125.02], [10.12, 125.22],
+      [10.02, 124.82], [10.55, 124.75], [11.08, 124.42],
     ],
   },
   {
     name: 'Mindanao',
     coords: [
-      [9.75, 125.5], [9.25, 126.2], [7.9, 126.45], [6.3, 126.2], [6.95, 125.6],
-      [6.1, 125.25], [5.6, 125.4], [6.1, 124.35], [7.15, 124.15], [7.8, 123.45],
-      [7.35, 122.8], [6.9, 122.05], [7.5, 122.15], [8.15, 122.95], [8.65, 123.35],
-      [8.2, 124.15], [8.55, 124.65], [9.0, 125.45],
+      [9.82, 125.48], [9.48, 125.95], [9.05, 126.25], [8.35, 126.38], [7.65, 126.58],
+      [6.85, 126.28], [6.28, 126.2], [6.95, 125.68], [6.55, 125.42], [5.85, 125.62],
+      [5.56, 125.35], [6.08, 124.45], [6.75, 123.95], [7.25, 124.22], [7.55, 123.75],
+      [7.78, 123.42], [7.35, 122.85], [6.88, 122.05], [7.45, 122.08], [8.05, 122.65],
+      [8.58, 123.35], [8.62, 123.78], [8.2, 124.18], [8.48, 124.65], [8.98, 125.45],
     ],
   },
 ];
 
-// Real GPS coordinates (lat, lon) for Philippine provinces & NCR zones
-const AREA_COORDS: Record<string, { lat: number; lon: number; ncr?: [number, number] }> = {
-  'ILOCOS NORTE': { lat: 18.16, lon: 120.59 },
-  'ILOCOS SUR': { lat: 17.57, lon: 120.39 },
-  'LA UNION': { lat: 16.61, lon: 120.32 },
-  PANGASINAN: { lat: 15.92, lon: 120.33 },
-  BAGUIO: { lat: 16.4, lon: 120.6 },
-  BENGUET: { lat: 16.45, lon: 120.65 },
-  CAGAYAN: { lat: 17.61, lon: 121.73 },
-  ISABELA: { lat: 16.98, lon: 121.81 },
-  'NUEVA ECIJA': { lat: 15.58, lon: 120.97 },
-  TARLAC: { lat: 15.48, lon: 120.59 },
-  PAMPANGA: { lat: 15.08, lon: 120.62 },
-  ZAMBALES: { lat: 15.32, lon: 119.98 },
-  BATAAN: { lat: 14.64, lon: 120.48 },
-  BULACAN: { lat: 14.85, lon: 120.88, ncr: [70, 28] },
-  CAMANAVA: { lat: 14.66, lon: 120.97, ncr: [52, 62] },
-  NORTH: { lat: 14.72, lon: 121.04, ncr: [82, 54] },
-  'QUEZON CITY': { lat: 14.67, lon: 121.04, ncr: [88, 72] },
-  QC: { lat: 14.67, lon: 121.04, ncr: [88, 72] },
-  MANILA: { lat: 14.59, lon: 120.98, ncr: [56, 86] },
-  'PASIG/MARIKINA': { lat: 14.61, lon: 121.09, ncr: [118, 82] },
-  PASIG: { lat: 14.58, lon: 121.08, ncr: [114, 88] },
-  MARIKINA: { lat: 14.65, lon: 121.1, ncr: [122, 72] },
-  RIZAL: { lat: 14.6, lon: 121.2, ncr: [135, 86] },
-  SOUTH: { lat: 14.43, lon: 121.02, ncr: [82, 118] },
-  MAKATI: { lat: 14.55, lon: 121.02, ncr: [82, 96] },
-  TAGUIG: { lat: 14.52, lon: 121.07, ncr: [104, 104] },
-  PARANAQUE: { lat: 14.47, lon: 121.01, ncr: [76, 114] },
-  'LAS PINAS': { lat: 14.45, lon: 120.98, ncr: [62, 120] },
-  MUNTINLUPA: { lat: 14.41, lon: 121.04, ncr: [92, 126] },
-  CAVITE: { lat: 14.32, lon: 120.92, ncr: [44, 134] },
-  LAGUNA: { lat: 14.23, lon: 121.25 },
-  BATANGAS: { lat: 13.76, lon: 121.06 },
-  'QUEZON PROVINCE': { lat: 13.94, lon: 121.75 },
-  QUEZON: { lat: 13.94, lon: 121.75 },
-  'ORIENTAL MINDORO': { lat: 13.05, lon: 121.4 },
-  'OCCIDENTAL MINDORO': { lat: 13.1, lon: 120.75 },
-  PALAWAN: { lat: 9.84, lon: 118.74 },
-  CAMNORTE: { lat: 14.12, lon: 122.85 },
-  'CAMARINES NORTE': { lat: 14.12, lon: 122.85 },
-  CAMSUR: { lat: 13.62, lon: 123.35 },
-  'CAMARINES SUR': { lat: 13.62, lon: 123.35 },
-  ALBAY: { lat: 13.15, lon: 123.73 },
-  SORSOGON: { lat: 12.97, lon: 124.0 },
-  ILOILO: { lat: 10.72, lon: 122.56 },
-  CAPIZ: { lat: 11.55, lon: 122.75 },
-  AKLAN: { lat: 11.71, lon: 122.36 },
-  ANTIQUE: { lat: 11.15, lon: 122.05 },
-  BACOLOD: { lat: 10.67, lon: 122.95 },
-  'NEGROS OCCIDENTAL': { lat: 10.4, lon: 122.95 },
-  DUMAGUETE: { lat: 9.31, lon: 123.31 },
-  'NEGROS ORIENTAL': { lat: 9.55, lon: 123.15 },
-  CEBU: { lat: 10.31, lon: 123.89 },
-  BOHOL: { lat: 9.85, lon: 124.14 },
-  LEYTE: { lat: 10.86, lon: 124.85 },
-  TACLOBAN: { lat: 11.24, lon: 125.0 },
-  SAMAR: { lat: 11.75, lon: 125.0 },
-  'ZAMBOANGA DEL NORTE': { lat: 8.45, lon: 123.25 },
-  'ZAMBOANGA DEL SUR': { lat: 7.83, lon: 123.43 },
-  ZAMBOANGA: { lat: 6.92, lon: 122.08 },
-  CDO: { lat: 8.45, lon: 124.63 },
-  'CAGAYAN DE ORO': { lat: 8.45, lon: 124.63 },
-  'MISAMIS ORIENTAL': { lat: 8.5, lon: 124.75 },
-  BUTUAN: { lat: 8.95, lon: 125.54 },
-  'DAVAO DEL NORTE': { lat: 7.45, lon: 125.81 },
-  DAVAO: { lat: 7.07, lon: 125.61 },
-  'DAVAO DEL SUR': { lat: 6.75, lon: 125.35 },
-  'GENERAL SANTOS': { lat: 6.11, lon: 125.17 },
-  GENSAN: { lat: 6.11, lon: 125.17 },
-  'SOUTH COTABATO': { lat: 6.3, lon: 124.85 },
+// Real GPS coordinates (lat, lon) + label side overrides to prevent overlap
+const AREA_COORDS: Record<
+  string,
+  { lat: number; lon: number; ncr?: [number, number]; labelRight?: boolean }
+> = {
+  'ILOCOS NORTE': { lat: 18.16, lon: 120.59, labelRight: true },
+  'ILOCOS SUR': { lat: 17.57, lon: 120.39, labelRight: false },
+  'LA UNION': { lat: 16.61, lon: 120.32, labelRight: true },
+  PANGASINAN: { lat: 15.92, lon: 120.33, labelRight: false },
+  BAGUIO: { lat: 16.4, lon: 120.6, labelRight: true },
+  BENGUET: { lat: 16.45, lon: 120.65, labelRight: true },
+  CAGAYAN: { lat: 17.61, lon: 121.73, labelRight: true },
+  ISABELA: { lat: 16.98, lon: 121.81, labelRight: true },
+  'NUEVA ECIJA': { lat: 15.58, lon: 120.97, labelRight: true },
+  TARLAC: { lat: 15.48, lon: 120.59, labelRight: false },
+  PAMPANGA: { lat: 15.08, lon: 120.62, labelRight: false },
+  ZAMBALES: { lat: 15.32, lon: 119.98, labelRight: false },
+  BATAAN: { lat: 14.64, lon: 120.48, labelRight: false },
+  BULACAN: { lat: 14.85, lon: 120.88, ncr: [32, 42] },
+  CAMANAVA: { lat: 14.66, lon: 120.97, ncr: [26, 70] },
+  NORTH: { lat: 14.72, lon: 121.04, ncr: [58, 56] },
+  'QUEZON CITY': { lat: 14.67, lon: 121.04, ncr: [56, 78] },
+  QC: { lat: 14.67, lon: 121.04, ncr: [56, 78] },
+  MANILA: { lat: 14.59, lon: 120.98, ncr: [30, 92] },
+  'PASIG/MARIKINA': { lat: 14.61, lon: 121.09, ncr: [44, 100] },
+  PASIG: { lat: 14.58, lon: 121.08, ncr: [44, 100] },
+  MARIKINA: { lat: 14.65, lon: 121.1, ncr: [44, 100] },
+  RIZAL: { lat: 14.6, lon: 121.2, ncr: [64, 106] },
+  SOUTH: { lat: 14.43, lon: 121.02, ncr: [34, 130] },
+  MAKATI: { lat: 14.55, lon: 121.02, ncr: [46, 114] },
+  TAGUIG: { lat: 14.52, lon: 121.07, ncr: [54, 118] },
+  PARANAQUE: { lat: 14.47, lon: 121.01, ncr: [34, 126] },
+  'LAS PINAS': { lat: 14.45, lon: 120.98, ncr: [28, 134] },
+  MUNTINLUPA: { lat: 14.41, lon: 121.04, ncr: [40, 140] },
+  CAVITE: { lat: 14.32, lon: 120.92, ncr: [22, 144] },
+  LAGUNA: { lat: 14.23, lon: 121.25, labelRight: false },
+  BATANGAS: { lat: 13.76, lon: 121.06, labelRight: false },
+  'QUEZON PROVINCE': { lat: 13.94, lon: 121.75, labelRight: false },
+  QUEZON: { lat: 13.94, lon: 121.75, labelRight: false },
+  'ORIENTAL MINDORO': { lat: 13.05, lon: 121.4, labelRight: true },
+  'OCCIDENTAL MINDORO': { lat: 13.1, lon: 120.75, labelRight: false },
+  PALAWAN: { lat: 9.84, lon: 118.74, labelRight: false },
+  CAMNORTE: { lat: 14.12, lon: 122.85, labelRight: true },
+  'CAMARINES NORTE': { lat: 14.12, lon: 122.85, labelRight: true },
+  CAMSUR: { lat: 13.62, lon: 123.35, labelRight: true },
+  'CAMARINES SUR': { lat: 13.62, lon: 123.35, labelRight: true },
+  ALBAY: { lat: 13.15, lon: 123.73, labelRight: true },
+  SORSOGON: { lat: 12.97, lon: 124.0, labelRight: true },
+  ILOILO: { lat: 10.72, lon: 122.56, labelRight: false },
+  CAPIZ: { lat: 11.55, lon: 122.75, labelRight: false },
+  AKLAN: { lat: 11.71, lon: 122.36, labelRight: false },
+  ANTIQUE: { lat: 11.15, lon: 122.05, labelRight: false },
+  BACOLOD: { lat: 10.67, lon: 122.95, labelRight: true },
+  'NEGROS OCCIDENTAL': { lat: 10.4, lon: 122.95, labelRight: true },
+  DUMAGUETE: { lat: 9.31, lon: 123.31, labelRight: false },
+  'NEGROS ORIENTAL': { lat: 9.55, lon: 123.15, labelRight: false },
+  CEBU: { lat: 10.31, lon: 123.89, labelRight: true },
+  BOHOL: { lat: 9.85, lon: 124.14, labelRight: true },
+  LEYTE: { lat: 10.86, lon: 124.85, labelRight: true },
+  TACLOBAN: { lat: 11.24, lon: 125.0, labelRight: true },
+  SAMAR: { lat: 11.75, lon: 125.0, labelRight: true },
+  'ZAMBOANGA DEL NORTE': { lat: 8.45, lon: 123.25, labelRight: false },
+  'ZAMBOANGA DEL SUR': { lat: 7.83, lon: 123.43, labelRight: false },
+  ZAMBOANGA: { lat: 6.92, lon: 122.08, labelRight: false },
+  CDO: { lat: 8.45, lon: 124.63, labelRight: true },
+  'CAGAYAN DE ORO': { lat: 8.45, lon: 124.63, labelRight: true },
+  'MISAMIS ORIENTAL': { lat: 8.5, lon: 124.75, labelRight: true },
+  BUTUAN: { lat: 8.95, lon: 125.54, labelRight: true },
+  'DAVAO DEL NORTE': { lat: 7.45, lon: 125.81, labelRight: true },
+  DAVAO: { lat: 7.07, lon: 125.61, labelRight: true },
+  'DAVAO DEL SUR': { lat: 6.75, lon: 125.35, labelRight: true },
+  'GENERAL SANTOS': { lat: 6.11, lon: 125.17, labelRight: true },
+  GENSAN: { lat: 6.11, lon: 125.17, labelRight: true },
+  'SOUTH COTABATO': { lat: 6.3, lon: 124.85, labelRight: false },
 };
 
 function findCoord(area: string) {
@@ -227,7 +249,7 @@ export function PhilippinesMap({ areas }: { areas: FieldAreaStat[] }) {
               key={isl.name}
               d={polyPath(isl.coords)}
               fill="rgba(255, 255, 255, 0.065)"
-              stroke="rgba(169, 178, 255, 0.34)"
+              stroke="rgba(169, 178, 255, 0.36)"
               strokeWidth="1.4"
               strokeLinejoin="round"
             />
@@ -241,8 +263,8 @@ export function PhilippinesMap({ areas }: { areas: FieldAreaStat[] }) {
             <g>
               <circle cx={mx} cy={my} r={5} fill="none" stroke={C.violet} strokeWidth="1.2" strokeDasharray="2 2" />
               <line
-                x1={182}
-                y1={165}
+                x1={206}
+                y1={168}
                 x2={mx}
                 y2={my}
                 stroke="rgba(169, 178, 255, 0.45)"
@@ -254,15 +276,15 @@ export function PhilippinesMap({ areas }: { areas: FieldAreaStat[] }) {
         })()}
 
         {/* NCR / Mega Manila Inset Box (Top-Left) */}
-        <g transform="translate(12, 22)">
+        <g transform="translate(10, 18)">
           <rect
             x="0"
             y="0"
-            width="170"
-            height="152"
+            width="196"
+            height="156"
             rx="14"
-            fill="rgba(12, 14, 20, 0.9)"
-            stroke="rgba(169, 178, 255, 0.32)"
+            fill="rgba(12, 14, 20, 0.92)"
+            stroke="rgba(169, 178, 255, 0.34)"
             strokeWidth="1.2"
           />
           <text
@@ -276,21 +298,17 @@ export function PhilippinesMap({ areas }: { areas: FieldAreaStat[] }) {
           >
             NCR / GREATER MANILA
           </text>
-          {/* Subtle Manila Bay shoreline curve inside inset */}
-          <path
-            d="M 18,45 Q 48,72 42,115 L 48,142 L 156,142 L 156,28 L 35,28 Z"
-            fill="rgba(255,255,255,0.035)"
-            stroke="rgba(255,255,255,0.09)"
-            strokeWidth="1"
-          />
 
           {ncrPins.map((a) => {
             const [ix, iy] = a.coord.ncr!;
             const col = pinColor(a);
-            const r = Math.min(10, 5 + a.total * 1.1);
+            const r = Math.min(9.5, 5.5 + a.total * 0.9);
             return (
               <g key={a.area} filter="url(#pin-shadow)">
-                <circle cx={ix} cy={iy} r={r + 5} fill={col} opacity={0.18} className="tv-live-dot" />
+                <circle cx={ix} cy={iy} r={r + 5} fill={col} opacity={0.22}>
+                  <animate attributeName="r" values={`${r + 3};${r + 7};${r + 3}`} dur="2.2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.28;0.08;0.28" dur="2.2s" repeatCount="indefinite" />
+                </circle>
                 <circle cx={ix} cy={iy} r={r} fill={col} stroke="#050507" strokeWidth="1.5" />
                 <text
                   x={ix}
@@ -304,9 +322,9 @@ export function PhilippinesMap({ areas }: { areas: FieldAreaStat[] }) {
                   {a.total}
                 </text>
                 <text
-                  x={ix + (ix > 95 ? -r - 4 : r + 5)}
+                  x={ix + r + 8}
                   y={iy + 3}
-                  textAnchor={ix > 95 ? 'end' : 'start'}
+                  textAnchor="start"
                   fill="#FFFFFF"
                   fontSize="8.5"
                   fontWeight="700"
@@ -323,11 +341,16 @@ export function PhilippinesMap({ areas }: { areas: FieldAreaStat[] }) {
         {mainPins.map((a) => {
           const [px, py] = project(a.coord.lat, a.coord.lon);
           const col = pinColor(a);
-          const r = Math.min(13, 5.5 + a.total * 1.1);
-          const labelRight = a.coord.lon >= 122.4 || a.area === 'LA UNION' || a.area === 'ORIENTAL MINDORO';
+          const r = Math.min(12.5, 5.5 + a.total * 1.1);
+          const labelRight = a.coord.labelRight ?? a.coord.lon >= 122.4;
+          const labelText = `${a.area.length > 14 ? a.area.slice(0, 13) + '…' : a.area} ${a.positive}/${a.total}`;
+          const boxW = Math.max(82, labelText.length * 5.6 + 14);
           return (
             <g key={a.area} filter="url(#pin-shadow)">
-              <circle cx={px} cy={py} r={r + 6} fill={col} opacity={0.18} className="tv-live-dot" />
+              <circle cx={px} cy={py} r={r + 6} fill={col} opacity={0.22}>
+                <animate attributeName="r" values={`${r + 3};${r + 9};${r + 3}`} dur="2.4s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.3;0.08;0.3" dur="2.4s" repeatCount="indefinite" />
+              </circle>
               <circle cx={px} cy={py} r={r} fill={col} stroke="#050507" strokeWidth="1.8" />
               <text
                 x={px}
@@ -340,28 +363,28 @@ export function PhilippinesMap({ areas }: { areas: FieldAreaStat[] }) {
               >
                 {a.total}
               </text>
-              <g transform={`translate(${px + (labelRight ? r + 6 : -r - 6)}, ${py - 8})`}>
+              <g transform={`translate(${px + (labelRight ? r + 6 : -r - 6)}, ${py - 8.5})`}>
                 <rect
-                  x={labelRight ? 0 : -118}
+                  x={labelRight ? 0 : -boxW}
                   y="0"
-                  width="118"
+                  width={boxW}
                   height="17"
                   rx="5"
-                  fill="rgba(8, 10, 15, 0.86)"
+                  fill="rgba(8, 10, 15, 0.88)"
                   stroke={col}
-                  strokeOpacity="0.45"
+                  strokeOpacity="0.5"
                   strokeWidth="0.9"
                 />
                 <text
-                  x={labelRight ? 6 : -6}
+                  x={labelRight ? 7 : -7}
                   y="11.5"
                   textAnchor={labelRight ? 'start' : 'end'}
                   fill="#FFFFFF"
-                  fontSize="8.2"
+                  fontSize="8.3"
                   fontWeight="700"
                   fontFamily="var(--font-mono)"
                 >
-                  {a.area.length > 13 ? a.area.slice(0, 12) + '…' : a.area} {a.positive}/{a.total}
+                  {labelText}
                 </text>
               </g>
             </g>
