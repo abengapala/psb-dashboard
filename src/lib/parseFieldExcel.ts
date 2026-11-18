@@ -82,15 +82,19 @@ export async function parseFieldExcelFile(
   }
 
   const hdr = (rows[hi] || []).map((c) => clean(c).toUpperCase());
-  const colAgent = hdr.findIndex((h) => h.includes('AGENT'));
-  const colArea = hdr.findIndex((h) => h === 'AREA' || h.includes('AREA'));
-  const colBank = hdr.findIndex((h) => h === 'BANK' || h.includes('BANK'));
+  const colAgent = hdr.findIndex((h) => h.includes('AGENT') || h.includes('OFFICER'));
+  const colArea =
+    hdr.findIndex((h) => h === 'AUTOFIELD AREA') >= 0
+      ? hdr.findIndex((h) => h === 'AUTOFIELD AREA')
+      : hdr.findIndex((h) => h === 'AREA' || h.includes('AREA'));
+  const colBank = hdr.findIndex((h) => h === 'BANK');
+  const colNewBank = hdr.findIndex((h) => h === 'NEW BANK NAME');
   const colOb = hdr.findIndex((h) => h === 'OB' || h.includes('OUTSTANDING'));
   const colDate = hdr.findIndex((h) => h.includes('FV RESULT DATE') || h === 'DATE');
   const colAddrRes =
-    hdr.findIndex((h) => h.includes('ADDRESS')) >= 0
-      ? hdr.findIndex((h) => h.includes('ADDRESS'))
-      : hdr.findIndex((h) => h.includes('FV RESULT') || h === 'STATUS');
+    hdr.findIndex((h) => h.includes('ADDRESS') && h.includes('FV RESULT')) >= 0
+      ? hdr.findIndex((h) => h.includes('ADDRESS') && h.includes('FV RESULT'))
+      : hdr.findIndex((h) => h === 'STATUS' || h.includes('FV RESULT'));
 
   const areaMap = new Map<string, FieldAreaStat>();
   const agentMap = new Map<string, FieldAgentStat>();
@@ -105,9 +109,13 @@ export async function parseFieldExcelFile(
   for (const r of rows.slice(hi + 1)) {
     if (!Array.isArray(r) || !r.some((c) => c !== null && c !== '')) continue;
 
-    if (colBank >= 0) {
-      const bankVal = clean(r[colBank]).toUpperCase();
-      if (bankVal && !bankVal.includes('PSB')) continue;
+    if (colBank >= 0 || colNewBank >= 0) {
+      const bankVal = colBank >= 0 ? clean(r[colBank]).toUpperCase() : '';
+      const newBankVal = colNewBank >= 0 ? clean(r[colNewBank]).toUpperCase() : '';
+      const isPsbCuring =
+        (bankVal.includes('PSB') && bankVal.includes('CURING')) ||
+        (newBankVal.includes('PSB') && newBankVal.includes('CURING'));
+      if (!isPsbCuring) continue;
     }
 
     const area = clean(r[colArea]).toUpperCase();

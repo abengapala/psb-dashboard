@@ -167,14 +167,17 @@ class App:
             return None
 
         hdr = [clean(c).upper() for c in rows[hi]]
-        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
-        col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
-        col_bank = next((j for j, h in enumerate(hdr) if "BANK" in h), -1)
+        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h or "OFFICER" in h), -1)
+        col_area = next((j for j, h in enumerate(hdr) if h == "AUTOFIELD AREA"), -1)
+        if col_area < 0:
+            col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
+        col_bank = next((j for j, h in enumerate(hdr) if h == "BANK"), -1)
+        col_new_bank = next((j for j, h in enumerate(hdr) if h == "NEW BANK NAME"), -1)
         col_ob = next((j for j, h in enumerate(hdr) if h == "OB" or "OUTSTANDING" in h), -1)
         col_date = next((j for j, h in enumerate(hdr) if "FV RESULT DATE" in h or h == "DATE"), -1)
-        col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h), -1)
+        col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h and "FV RESULT" in h), -1)
         if col_res < 0:
-            col_res = next((j for j, h in enumerate(hdr) if "FV RESULT" in h or h == "STATUS"), -1)
+            col_res = next((j for j, h in enumerate(hdr) if h == "STATUS" or "FV RESULT" in h), -1)
         if col_area < 0 or col_res < 0:
             return None
 
@@ -187,9 +190,10 @@ class App:
         for r in rows[hi + 1:]:
             if not r or not any(c is not None and c != "" for c in r):
                 continue
-            if col_bank >= 0 and col_bank < len(r):
-                bval = clean(r[col_bank]).upper()
-                if bval and "PSB" not in bval:
+            if col_bank >= 0 or col_new_bank >= 0:
+                bval = clean(r[col_bank]).upper() if 0 <= col_bank < len(r) else ""
+                nbval = clean(r[col_new_bank]).upper() if 0 <= col_new_bank < len(r) else ""
+                if not (("PSB" in bval and "CURING" in bval) or ("PSB" in nbval and "CURING" in nbval)):
                     continue
             area = clean(r[col_area] if col_area < len(r) else None).upper()
             if not area:
@@ -386,14 +390,17 @@ class App:
             return None
 
         hdr = [clean(c).upper() for c in rows[hi]]
-        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
-        col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
-        col_bank = next((j for j, h in enumerate(hdr) if "BANK" in h), -1)
+        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h or "OFFICER" in h), -1)
+        col_area = next((j for j, h in enumerate(hdr) if h == "AUTOFIELD AREA"), -1)
+        if col_area < 0:
+            col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
+        col_bank = next((j for j, h in enumerate(hdr) if h == "BANK"), -1)
+        col_new_bank = next((j for j, h in enumerate(hdr) if h == "NEW BANK NAME"), -1)
         col_ob = next((j for j, h in enumerate(hdr) if h == "OB" or "OUTSTANDING" in h), -1)
         col_date = next((j for j, h in enumerate(hdr) if "FV RESULT DATE" in h or h == "DATE"), -1)
-        col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h), -1)
+        col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h and "FV RESULT" in h), -1)
         if col_res < 0:
-            col_res = next((j for j, h in enumerate(hdr) if "FV RESULT" in h or h == "STATUS"), -1)
+            col_res = next((j for j, h in enumerate(hdr) if h == "STATUS" or "FV RESULT" in h), -1)
         if col_area < 0 or col_res < 0:
             return None
 
@@ -406,9 +413,10 @@ class App:
         for r in rows[hi + 1:]:
             if not r or not any(c is not None and c != "" for c in r):
                 continue
-            if col_bank >= 0 and col_bank < len(r):
-                bval = clean(r[col_bank]).upper()
-                if bval and "PSB" not in bval:
+            if col_bank >= 0 or col_new_bank >= 0:
+                bval = clean(r[col_bank]).upper() if 0 <= col_bank < len(r) else ""
+                nbval = clean(r[col_new_bank]).upper() if 0 <= col_new_bank < len(r) else ""
+                if not (("PSB" in bval and "CURING" in bval) or ("PSB" in nbval and "CURING" in nbval)):
                     continue
             area = clean(r[col_area] if col_area < len(r) else None).upper()
             if not area:
@@ -678,14 +686,17 @@ class App:
             return None
 
         hdr = [clean(c).upper() for c in rows[hi]]
-        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
-        col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
-        col_bank = next((j for j, h in enumerate(hdr) if "BANK" in h), -1)
+        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h or "OFFICER" in h), -1)
+        col_area = next((j for j, h in enumerate(hdr) if h == "AUTOFIELD AREA"), -1)
+        if col_area < 0:
+            col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
+        col_bank = next((j for j, h in enumerate(hdr) if h == "BANK"), -1)
+        col_new_bank = next((j for j, h in enumerate(hdr) if h == "NEW BANK NAME"), -1)
         col_ob = next((j for j, h in enumerate(hdr) if h == "OB" or "OUTSTANDING" in h), -1)
         col_date = next((j for j, h in enumerate(hdr) if "FV RESULT DATE" in h or h == "DATE"), -1)
-        col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h), -1)
+        col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h and "FV RESULT" in h), -1)
         if col_res < 0:
-            col_res = next((j for j, h in enumerate(hdr) if "FV RESULT" in h or h == "STATUS"), -1)
+            col_res = next((j for j, h in enumerate(hdr) if h == "STATUS" or "FV RESULT" in h), -1)
         if col_area < 0 or col_res < 0:
             return None
 
@@ -698,9 +709,10 @@ class App:
         for r in rows[hi + 1:]:
             if not r or not any(c is not None and c != "" for c in r):
                 continue
-            if col_bank >= 0 and col_bank < len(r):
-                bval = clean(r[col_bank]).upper()
-                if bval and "PSB" not in bval:
+            if col_bank >= 0 or col_new_bank >= 0:
+                bval = clean(r[col_bank]).upper() if 0 <= col_bank < len(r) else ""
+                nbval = clean(r[col_new_bank]).upper() if 0 <= col_new_bank < len(r) else ""
+                if not (("PSB" in bval and "CURING" in bval) or ("PSB" in nbval and "CURING" in nbval)):
                     continue
             area = clean(r[col_area] if col_area < len(r) else None).upper()
             if not area:
@@ -1078,7 +1090,8 @@ def find_latest_field_xlsx(folder: Path) -> Path | None:
     if not folder.exists():
         return None
     candidates = [
-        f for f in folder.glob("PSB FIELD RESULT*.xlsx")
+        f for pat in ("PSB FIELD RESULT*.xlsx", "FIELD RESULT*.xlsx")
+        for f in folder.glob(pat)
         if f.is_file() and not f.name.startswith("~$")
     ]
     return max(candidates, key=lambda f: f.stat().st_mtime) if candidates else None

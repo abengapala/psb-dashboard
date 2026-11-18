@@ -177,38 +177,68 @@
     }
   },
   "field": {
-    "asOf": "2026-11-12",
-    "total": 31,
-    "positive": 13,
-    "pos": 10,
-    "ptp": 2,
+    "asOf": "2026-11-17",
+    "total": 57,
+    "positive": 32,
+    "pos": 26,
+    "ptp": 5,
     "repo": 1,
-    "neg": 18,
-    "positiveRate": 41.9,
-    "totalOb": 17228954.28,
+    "neg": 25,
+    "positiveRate": 56.1,
+    "totalOb": 34646700.28,
     "areas": [
       {
-        "area": "ILOILO",
-        "total": 5,
-        "positive": 3,
-        "pos": 2,
-        "ptp": 1,
-        "repo": 0,
-        "neg": 2,
-        "ob": 1856151.0
-      },
-      {
         "area": "QUEZON PROVINCE",
-        "total": 5,
+        "total": 7,
         "positive": 1,
         "pos": 1,
         "ptp": 0,
         "repo": 0,
-        "neg": 4,
-        "ob": 4297050.0
+        "neg": 6,
+        "ob": 5592697.1
       },
       {
-        "area": "SOUTH",
+        "area": "ILOILO",
+        "total": 6,
+        "positive": 4,
+        "pos": 3,
+        "ptp": 1,
+        "repo": 0,
+        "neg": 2,
+        "ob": 2633983.49
+      },
+      {
+        "area": "NUEVA ECIJA",
+        "total": 5,
+        "positive": 5,
+        "pos": 4,
+        "ptp": 1,
+        "repo": 0,
+        "neg": 0,
+        "ob": 5000381.0
+      },
+      {
+        "area": "MARIKINA",
+        "total": 5,
+        "positive": 2,
+        "pos": 2,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 3,
+        "ob": 3828537.23
+      },
+      {
+        "area": "CEBU",
+        "total": 4,
+        "positive": 4,
+        "pos": 2,
+        "ptp": 2,
+        "repo": 0,
+        "neg": 0,
+        "ob": 4469276.48
+      },
+      {
+        "area": "MUNTINLUPA",
         "total": 4,
         "positive": 0,
         "pos": 0,
@@ -218,14 +248,24 @@
         "ob": 2032411.0
       },
       {
-        "area": "CAMSUR",
+        "area": "CAMANAVA",
         "total": 3,
         "positive": 3,
         "pos": 2,
-        "ptp": 1,
-        "repo": 0,
+        "ptp": 0,
+        "repo": 1,
         "neg": 0,
-        "ob": 541853.34
+        "ob": 325391.04
+      },
+      {
+        "area": "PANGASINAN",
+        "total": 3,
+        "positive": 2,
+        "pos": 2,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 1,
+        "ob": 1499182.22
       },
       {
         "area": "DAVAO DEL NORTE",
@@ -248,7 +288,17 @@
         "ob": 916950.0
       },
       {
-        "area": "ZAMBOANGA DEL NORTE",
+        "area": "ALBAY",
+        "total": 2,
+        "positive": 2,
+        "pos": 2,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 0,
+        "ob": 25012.0
+      },
+      {
+        "area": "DAVAO DEL SUR",
         "total": 2,
         "positive": 2,
         "pos": 2,
@@ -256,6 +306,16 @@
         "repo": 0,
         "neg": 0,
         "ob": 905788.0
+      },
+      {
+        "area": "BULACAN",
+        "total": 2,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 1,
+        "ob": 775017.18
       },
       {
         "area": "LA UNION",
@@ -268,34 +328,44 @@
         "ob": 937668.0
       },
       {
-        "area": "PASIG/MARIKINA",
+        "area": "LAGUNA",
         "total": 2,
         "positive": 0,
         "pos": 0,
         "ptp": 0,
         "repo": 0,
         "neg": 2,
-        "ob": 2505078.0
+        "ob": 1164672.97
       },
       {
-        "area": "CAMANAVA",
+        "area": "CAMSUR",
         "total": 1,
         "positive": 1,
         "pos": 0,
-        "ptp": 0,
-        "repo": 1,
+        "ptp": 1,
+        "repo": 0,
         "neg": 0,
-        "ob": 630045.52
+        "ob": 0.0
       },
       {
-        "area": "BULACAN",
+        "area": "BATANGAS",
         "total": 1,
-        "positive": 0,
-        "pos": 0,
+        "positive": 1,
+        "pos": 1,
         "ptp": 0,
         "repo": 0,
-        "neg": 1,
-        "ob": 873016.42
+        "neg": 0,
+        "ob": 825695.0
+      },
+      {
+        "area": "CAVITE",
+        "total": 1,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 0,
+        "ob": 613194.34
       },
       {
         "area": "BACOLOD",
@@ -306,80 +376,30 @@
         "repo": 0,
         "neg": 1,
         "ob": 199454.0
+      },
+      {
+        "area": "ZAMBOANGA",
+        "total": 1,
+        "positive": 0,
+        "pos": 0,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 1,
+        "ob": 1367900.23
       }
     ],
     "agents": [
       {
-        "tag": "JSPENA",
-        "name": "Jhumir Peña",
-        "total": 13,
-        "positive": 4,
-        "pos": 4,
-        "ptp": 0,
-        "repo": 0,
-        "neg": 9,
-        "ob": 8739982.0,
-        "photo": "photos/jhumir.png"
-      },
-      {
-        "tag": "PSAVEDRA",
-        "name": "Polo Savedra",
-        "total": 5,
-        "positive": 4,
-        "pos": 3,
-        "ptp": 1,
-        "repo": 0,
-        "neg": 1,
-        "ob": 2632450.0,
-        "photo": "photos/polo.png"
-      },
-      {
-        "tag": "CSAYSON",
-        "name": "Chelsea Sayson",
-        "total": 6,
-        "positive": 2,
-        "pos": 1,
-        "ptp": 1,
-        "repo": 0,
-        "neg": 4,
-        "ob": 3681646.76,
-        "photo": "photos/Chelsea.png"
-      },
-      {
-        "tag": "CJBCRUZ",
-        "name": "Charles Cruz",
-        "total": 4,
-        "positive": 1,
-        "pos": 1,
-        "ptp": 0,
-        "repo": 0,
-        "neg": 3,
-        "ob": 839997.0,
-        "photo": "photos/charles.png"
-      },
-      {
-        "tag": "EBASTASA",
-        "name": "Eurie Bastasa",
-        "total": 2,
-        "positive": 1,
-        "pos": 1,
-        "ptp": 0,
-        "repo": 0,
-        "neg": 1,
-        "ob": 704833.0,
-        "photo": "photos/eurie.png"
-      },
-      {
-        "tag": "ABORONG",
-        "name": "Aira Borong",
-        "total": 1,
-        "positive": 1,
-        "pos": 0,
-        "ptp": 0,
+        "tag": "0",
+        "name": "0",
+        "total": 57,
+        "positive": 32,
+        "pos": 26,
+        "ptp": 5,
         "repo": 1,
-        "neg": 0,
-        "ob": 630045.52,
-        "photo": "photos/aira.png"
+        "neg": 25,
+        "ob": 34646700.28,
+        "photo": null
       }
     ]
   }

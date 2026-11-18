@@ -279,7 +279,7 @@ export function FieldVisitPage({ field, entered }: { field: FieldReport; entered
           </div>
         </Card>
 
-        {/* 3. Agent Field Activity */}
+        {/* 3. Agent Field Activity (or Top OB Areas when raw file has no agent tags) */}
         <Card
           variant="glass"
           entered={entered}
@@ -296,49 +296,84 @@ export function FieldVisitPage({ field, entered }: { field: FieldReport; entered
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontSize: 'clamp(12px, 0.9vw, 16px)', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              By Agent
+              {field.agents.length > 0 ? 'By Agent' : 'Result & Top OB'}
             </span>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(9px, 0.68vw, 12px)', color: 'var(--t3)' }}>
-              POSITIVE RATE
+              {field.agents.length > 0 ? 'POSITIVE RATE' : 'PSB AUTO CURING'}
             </span>
           </div>
 
           <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', gap: '0.5vh', overflow: 'hidden' }}>
-            {field.agents.slice(0, 9).map((ag) => {
-              const rate = ag.total > 0 ? Math.round((ag.positive / ag.total) * 100) : 0;
-              return (
-                <div
-                  key={ag.tag || ag.name}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.55vw',
-                    padding: '0.45vh 0.55vw',
-                    borderRadius: 10,
-                    background: 'rgba(255,255,255,0.035)',
-                    border: '1px solid rgba(255,255,255,0.07)',
-                  }}
-                >
-                  <Avatar name={ag.name} photo={ag.photo} size="2.1vw" />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 'clamp(11px, 0.82vw, 15px)', fontWeight: 600, color: 'var(--t1)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {ag.name}
+            {field.agents.length > 0 ? (
+              field.agents.slice(0, 9).map((ag) => {
+                const rate = ag.total > 0 ? Math.round((ag.positive / ag.total) * 100) : 0;
+                return (
+                  <div
+                    key={ag.tag || ag.name}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.55vw',
+                      padding: '0.45vh 0.55vw',
+                      borderRadius: 10,
+                      background: 'rgba(255,255,255,0.035)',
+                      border: '1px solid rgba(255,255,255,0.07)',
+                    }}
+                  >
+                    <Avatar name={ag.name} photo={ag.photo} size="2.1vw" />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 'clamp(11px, 0.82vw, 15px)', fontWeight: 600, color: 'var(--t1)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {ag.name}
+                      </div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(9px, 0.65vw, 12px)', color: 'var(--t2)' }}>
+                        {ag.positive} pos · {ag.neg} neg
+                      </div>
                     </div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(9px, 0.65vw, 12px)', color: 'var(--t2)' }}>
-                      {ag.positive} pos · {ag.neg} neg
+                    <div style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>
+                      <div style={{ fontSize: 'clamp(12px, 0.9vw, 16px)', fontWeight: 700, color: rate >= 50 ? C.green : C.amber }}>
+                        {rate}%
+                      </div>
+                      <div style={{ fontSize: 'clamp(9px, 0.62vw, 11px)', color: 'var(--t3)' }}>
+                        {ag.total} visits
+                      </div>
                     </div>
                   </div>
-                  <div style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>
-                    <div style={{ fontSize: 'clamp(12px, 0.9vw, 16px)', fontWeight: 700, color: rate >= 50 ? C.green : C.amber }}>
-                      {rate}%
+                );
+              })
+            ) : (
+              [...field.areas]
+                .sort((a, b) => b.ob - a.ob)
+                .slice(0, 8)
+                .map((a, idx) => (
+                  <div
+                    key={a.area}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.55vw',
+                      padding: '0.5vh 0.6vw',
+                      borderRadius: 10,
+                      background: 'rgba(255,255,255,0.035)',
+                      border: '1px solid rgba(255,255,255,0.07)',
+                    }}
+                  >
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(10px, 0.78vw, 14px)', fontWeight: 700, color: 'var(--t3)', width: '1.2vw' }}>
+                      {idx + 1}
+                    </span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 'clamp(11px, 0.82vw, 15px)', fontWeight: 600, color: 'var(--t1)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {a.area}
+                      </div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(9px, 0.65vw, 12px)', color: 'var(--t2)' }}>
+                        {a.positive} pos · {a.neg} neg
+                      </div>
                     </div>
-                    <div style={{ fontSize: 'clamp(9px, 0.62vw, 11px)', color: 'var(--t3)' }}>
-                      {ag.total} visits
+                    <div style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: 'clamp(11px, 0.85vw, 15px)', fontWeight: 700, color: C.lime, flexShrink: 0 }}>
+                      {peso(a.ob)}
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                ))
+            )}
           </div>
         </Card>
       </div>
