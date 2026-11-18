@@ -13,6 +13,47 @@ const TAG_TO_AGENT: Record<string, { name: string; photo: string }> = {
   JGALOPE: { name: 'Josafat Galope', photo: 'photos/josafat.png' },
 };
 
+function resolveFieldAgent(raw: string): { key: string; name: string; photo: string | null } {
+  const u = raw.trim().toUpperCase();
+  if (!u || u === 'N/A' || u === 'NO AGENT' || u === 'NONE') {
+    return { key: 'UNASSIGNED', name: 'Unassigned', photo: null };
+  }
+  if (u === 'BCRM') {
+    return { key: 'BCRM', name: 'BCRM', photo: null };
+  }
+  if (TAG_TO_AGENT[u]) {
+    return { key: u, ...TAG_TO_AGENT[u] };
+  }
+  if (u.includes('CHELSEA') || u.includes('SAYSON')) {
+    return { key: 'CSAYSON', ...TAG_TO_AGENT.CSAYSON };
+  }
+  if (u.includes('JHUMIR') || u.includes('JUMIR') || u.includes('NHUMIR') || u.includes('HUMOR') || u.includes('PENA') || u.includes('PEÑA')) {
+    return { key: 'JSPENA', ...TAG_TO_AGENT.JSPENA };
+  }
+  if (u.includes('POLO') || u.includes('SAVEDRA')) {
+    return { key: 'PSAVEDRA', ...TAG_TO_AGENT.PSAVEDRA };
+  }
+  if (u.includes('AIRA') || u.includes('BORONG')) {
+    return { key: 'ABORONG', ...TAG_TO_AGENT.ABORONG };
+  }
+  if (u.includes('CHARLES') || u.includes('CRUZ')) {
+    return { key: 'CJBCRUZ', ...TAG_TO_AGENT.CJBCRUZ };
+  }
+  if (u.includes('EURIE') || u.includes('EURE') || u.includes('BASTASA')) {
+    return { key: 'EBASTASA', ...TAG_TO_AGENT.EBASTASA };
+  }
+  if (u.includes('RODEL') || u.includes('HAMA')) {
+    return { key: 'RHAMA', ...TAG_TO_AGENT.RHAMA };
+  }
+  if (u.includes('JAYMARK') || u.includes('MOSENDE')) {
+    return { key: 'JMOSENDE', ...TAG_TO_AGENT.JMOSENDE };
+  }
+  if (u.includes('JOSAFAT') || u.includes('GALOPE')) {
+    return { key: 'JGALOPE', ...TAG_TO_AGENT.JGALOPE };
+  }
+  return { key: u, name: raw.trim(), photo: null };
+}
+
 function clean(v: unknown): string {
   if (v === null || v === undefined) return '';
   return String(v).trim().replace(/\s+/g, ' ');
@@ -82,7 +123,10 @@ export async function parseFieldExcelFile(
   }
 
   const hdr = (rows[hi] || []).map((c) => clean(c).toUpperCase());
-  const colAgent = hdr.findIndex((h) => h.includes('AGENT') || h.includes('OFFICER'));
+  const colAgent =
+    hdr.findIndex((h) => h.includes('AGENT')) >= 0
+      ? hdr.findIndex((h) => h.includes('AGENT'))
+      : hdr.findIndex((h) => h === 'REPORT TO' || h.includes('OFFICER'));
   const colArea =
     hdr.findIndex((h) => h === 'AUTOFIELD AREA') >= 0
       ? hdr.findIndex((h) => h === 'AUTOFIELD AREA')
@@ -152,13 +196,13 @@ export async function parseFieldExcelFile(
     aStat.ob = Math.round((aStat.ob + ob) * 100) / 100;
 
     if (rawTag) {
-      const mapped = TAG_TO_AGENT[rawTag];
-      const agKey = mapped ? mapped.name : rawTag;
+      const resolved = resolveFieldAgent(rawTag);
+      const agKey = resolved.name;
       let agStat = agentMap.get(agKey);
       if (!agStat) {
         agStat = {
-          tag: rawTag,
-          name: mapped ? mapped.name : rawTag,
+          tag: resolved.key,
+          name: resolved.name,
           total: 0,
           positive: 0,
           pos: 0,
@@ -166,7 +210,7 @@ export async function parseFieldExcelFile(
           repo: 0,
           neg: 0,
           ob: 0,
-          photo: mapped ? mapped.photo : null,
+          photo: resolved.photo,
         };
         agentMap.set(agKey, agStat);
       }

@@ -166,8 +166,38 @@ class App:
         if hi is None:
             return None
 
+        def resolve_agent(raw):
+            u = raw.strip().upper()
+            if not u or u in ("N/A", "NO AGENT", "NONE"):
+                return "UNASSIGNED", "Unassigned", None
+            if u == "BCRM":
+                return "BCRM", "BCRM", None
+            if u in tag_map:
+                return u, tag_map[u][0], tag_map[u][1]
+            if "CHELSEA" in u or "SAYSON" in u:
+                return "CSAYSON", *tag_map["CSAYSON"]
+            if any(k in u for k in ("JHUMIR", "JUMIR", "NHUMIR", "HUMOR", "PENA", "PEÑA")):
+                return "JSPENA", *tag_map["JSPENA"]
+            if "POLO" in u or "SAVEDRA" in u:
+                return "PSAVEDRA", *tag_map["PSAVEDRA"]
+            if "AIRA" in u or "BORONG" in u:
+                return "ABORONG", *tag_map["ABORONG"]
+            if "CHARLES" in u or "CRUZ" in u:
+                return "CJBCRUZ", *tag_map["CJBCRUZ"]
+            if any(k in u for k in ("EURIE", "EURE", "BASTASA")):
+                return "EBASTASA", *tag_map["EBASTASA"]
+            if "RODEL" in u or "HAMA" in u:
+                return "RHAMA", *tag_map["RHAMA"]
+            if "JAYMARK" in u or "MOSENDE" in u:
+                return "JMOSENDE", *tag_map["JMOSENDE"]
+            if "JOSAFAT" in u or "GALOPE" in u:
+                return "JGALOPE", *tag_map["JGALOPE"]
+            return u, raw.strip(), None
+
         hdr = [clean(c).upper() for c in rows[hi]]
-        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h or "OFFICER" in h), -1)
+        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
+        if col_agent < 0:
+            col_agent = next((j for j, h in enumerate(hdr) if h == "REPORT TO" or "OFFICER" in h), -1)
         col_area = next((j for j, h in enumerate(hdr) if h == "AUTOFIELD AREA"), -1)
         if col_area < 0:
             col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
@@ -230,12 +260,10 @@ class App:
             astat["ob"] = round(astat["ob"] + ob, 2)
 
             if raw_tag:
-                mapped = tag_map.get(raw_tag)
-                ag_name = mapped[0] if mapped else raw_tag
-                ag_photo = mapped[1] if mapped else None
+                ag_tag, ag_name, ag_photo = resolve_agent(raw_tag)
                 agstat = agents.setdefault(
                     ag_name,
-                    {"tag": raw_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
+                    {"tag": ag_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
                 )
                 agstat["total"] += 1
                 if is_pos:
@@ -389,8 +417,38 @@ class App:
         if hi is None:
             return None
 
+        def resolve_agent(raw):
+            u = raw.strip().upper()
+            if not u or u in ("N/A", "NO AGENT", "NONE"):
+                return "UNASSIGNED", "Unassigned", None
+            if u == "BCRM":
+                return "BCRM", "BCRM", None
+            if u in tag_map:
+                return u, tag_map[u][0], tag_map[u][1]
+            if "CHELSEA" in u or "SAYSON" in u:
+                return "CSAYSON", *tag_map["CSAYSON"]
+            if any(k in u for k in ("JHUMIR", "JUMIR", "NHUMIR", "HUMOR", "PENA", "PEÑA")):
+                return "JSPENA", *tag_map["JSPENA"]
+            if "POLO" in u or "SAVEDRA" in u:
+                return "PSAVEDRA", *tag_map["PSAVEDRA"]
+            if "AIRA" in u or "BORONG" in u:
+                return "ABORONG", *tag_map["ABORONG"]
+            if "CHARLES" in u or "CRUZ" in u:
+                return "CJBCRUZ", *tag_map["CJBCRUZ"]
+            if any(k in u for k in ("EURIE", "EURE", "BASTASA")):
+                return "EBASTASA", *tag_map["EBASTASA"]
+            if "RODEL" in u or "HAMA" in u:
+                return "RHAMA", *tag_map["RHAMA"]
+            if "JAYMARK" in u or "MOSENDE" in u:
+                return "JMOSENDE", *tag_map["JMOSENDE"]
+            if "JOSAFAT" in u or "GALOPE" in u:
+                return "JGALOPE", *tag_map["JGALOPE"]
+            return u, raw.strip(), None
+
         hdr = [clean(c).upper() for c in rows[hi]]
-        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h or "OFFICER" in h), -1)
+        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
+        if col_agent < 0:
+            col_agent = next((j for j, h in enumerate(hdr) if h == "REPORT TO" or "OFFICER" in h), -1)
         col_area = next((j for j, h in enumerate(hdr) if h == "AUTOFIELD AREA"), -1)
         if col_area < 0:
             col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
@@ -453,12 +511,10 @@ class App:
             astat["ob"] = round(astat["ob"] + ob, 2)
 
             if raw_tag:
-                mapped = tag_map.get(raw_tag)
-                ag_name = mapped[0] if mapped else raw_tag
-                ag_photo = mapped[1] if mapped else None
+                ag_tag, ag_name, ag_photo = resolve_agent(raw_tag)
                 agstat = agents.setdefault(
                     ag_name,
-                    {"tag": raw_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
+                    {"tag": ag_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
                 )
                 agstat["total"] += 1
                 if is_pos:
@@ -685,8 +741,38 @@ class App:
         if hi is None:
             return None
 
+        def resolve_agent(raw):
+            u = raw.strip().upper()
+            if not u or u in ("N/A", "NO AGENT", "NONE"):
+                return "UNASSIGNED", "Unassigned", None
+            if u == "BCRM":
+                return "BCRM", "BCRM", None
+            if u in tag_map:
+                return u, tag_map[u][0], tag_map[u][1]
+            if "CHELSEA" in u or "SAYSON" in u:
+                return "CSAYSON", *tag_map["CSAYSON"]
+            if any(k in u for k in ("JHUMIR", "JUMIR", "NHUMIR", "HUMOR", "PENA", "PEÑA")):
+                return "JSPENA", *tag_map["JSPENA"]
+            if "POLO" in u or "SAVEDRA" in u:
+                return "PSAVEDRA", *tag_map["PSAVEDRA"]
+            if "AIRA" in u or "BORONG" in u:
+                return "ABORONG", *tag_map["ABORONG"]
+            if "CHARLES" in u or "CRUZ" in u:
+                return "CJBCRUZ", *tag_map["CJBCRUZ"]
+            if any(k in u for k in ("EURIE", "EURE", "BASTASA")):
+                return "EBASTASA", *tag_map["EBASTASA"]
+            if "RODEL" in u or "HAMA" in u:
+                return "RHAMA", *tag_map["RHAMA"]
+            if "JAYMARK" in u or "MOSENDE" in u:
+                return "JMOSENDE", *tag_map["JMOSENDE"]
+            if "JOSAFAT" in u or "GALOPE" in u:
+                return "JGALOPE", *tag_map["JGALOPE"]
+            return u, raw.strip(), None
+
         hdr = [clean(c).upper() for c in rows[hi]]
-        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h or "OFFICER" in h), -1)
+        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
+        if col_agent < 0:
+            col_agent = next((j for j, h in enumerate(hdr) if h == "REPORT TO" or "OFFICER" in h), -1)
         col_area = next((j for j, h in enumerate(hdr) if h == "AUTOFIELD AREA"), -1)
         if col_area < 0:
             col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
@@ -749,12 +835,10 @@ class App:
             astat["ob"] = round(astat["ob"] + ob, 2)
 
             if raw_tag:
-                mapped = tag_map.get(raw_tag)
-                ag_name = mapped[0] if mapped else raw_tag
-                ag_photo = mapped[1] if mapped else None
+                ag_tag, ag_name, ag_photo = resolve_agent(raw_tag)
                 agstat = agents.setdefault(
                     ag_name,
-                    {"tag": raw_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
+                    {"tag": ag_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
                 )
                 agstat["total"] += 1
                 if is_pos:

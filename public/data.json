@@ -390,16 +390,100 @@
     ],
     "agents": [
       {
-        "tag": "0",
-        "name": "0",
-        "total": 57,
-        "positive": 32,
-        "pos": 26,
-        "ptp": 5,
+        "tag": "BCRM",
+        "name": "BCRM",
+        "total": 22,
+        "positive": 12,
+        "pos": 9,
+        "ptp": 2,
         "repo": 1,
-        "neg": 25,
-        "ob": 34646700.28,
+        "neg": 10,
+        "ob": 14378740.08,
         "photo": null
+      },
+      {
+        "tag": "ABORONG",
+        "name": "Aira Borong",
+        "total": 7,
+        "positive": 7,
+        "pos": 6,
+        "ptp": 1,
+        "repo": 0,
+        "neg": 0,
+        "ob": 5269782.0,
+        "photo": "photos/aira.png"
+      },
+      {
+        "tag": "CSAYSON",
+        "name": "Chelsea Sayson",
+        "total": 9,
+        "positive": 4,
+        "pos": 3,
+        "ptp": 1,
+        "repo": 0,
+        "neg": 5,
+        "ob": 3754233.57,
+        "photo": "photos/Chelsea.png"
+      },
+      {
+        "tag": "PSAVEDRA",
+        "name": "Polo Savedra",
+        "total": 5,
+        "positive": 4,
+        "pos": 3,
+        "ptp": 1,
+        "repo": 0,
+        "neg": 1,
+        "ob": 2632450.0,
+        "photo": "photos/polo.png"
+      },
+      {
+        "tag": "JSPENA",
+        "name": "Jhumir Peña",
+        "total": 9,
+        "positive": 2,
+        "pos": 2,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 7,
+        "ob": 5968098.89,
+        "photo": "photos/jhumir.png"
+      },
+      {
+        "tag": "UNASSIGNED",
+        "name": "Unassigned",
+        "total": 3,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 2,
+        "ob": 2000254.74,
+        "photo": null
+      },
+      {
+        "tag": "CJBCRUZ",
+        "name": "Charles Cruz",
+        "total": 1,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 0,
+        "ob": 329163.0,
+        "photo": "photos/charles.png"
+      },
+      {
+        "tag": "EBASTASA",
+        "name": "Eurie Bastasa",
+        "total": 1,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 0,
+        "ob": 313978.0,
+        "photo": "photos/eurie.png"
       }
     ]
   }
