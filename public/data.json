@@ -472,42 +472,6 @@
         "neg": 1,
         "ob": 737240.46,
         "photo": "photos/eurie.png"
-      },
-      {
-        "tag": "JOSHUA ROMERO",
-        "name": "Joshua romero",
-        "total": 1,
-        "positive": 1,
-        "pos": 1,
-        "ptp": 0,
-        "repo": 0,
-        "neg": 0,
-        "ob": 613194.34,
-        "photo": null
-      },
-      {
-        "tag": "PELAYO MARIONE JEOFFREY",
-        "name": "Pelayo Marione Jeoffrey",
-        "total": 1,
-        "positive": 1,
-        "pos": 1,
-        "ptp": 0,
-        "repo": 0,
-        "neg": 0,
-        "ob": 704607.64,
-        "photo": null
-      },
-      {
-        "tag": "JAYVE BARLISO",
-        "name": "Jayve Barliso",
-        "total": 2,
-        "positive": 0,
-        "pos": 0,
-        "ptp": 0,
-        "repo": 0,
-        "neg": 2,
-        "ob": 280544.0,
-        "photo": null
       }
     ]
   }

@@ -301,7 +301,7 @@ class App:
                     hit = acct_map.get(acct_clean) or (acct_map.get(acct_clean[-10:]) if len(acct_clean) > 10 else None)
                     if hit:
                         ag_tag, ag_name, ag_photo = resolve_agent(hit)
-                if ag_tag not in ("BCRM", "UNASSIGNED"):
+                if ag_tag in tag_map:
                     agstat = agents.setdefault(
                         ag_name,
                         {"tag": ag_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
@@ -599,7 +599,7 @@ class App:
                     hit = acct_map.get(acct_clean) or (acct_map.get(acct_clean[-10:]) if len(acct_clean) > 10 else None)
                     if hit:
                         ag_tag, ag_name, ag_photo = resolve_agent(hit)
-                if ag_tag not in ("BCRM", "UNASSIGNED"):
+                if ag_tag in tag_map:
                     agstat = agents.setdefault(
                         ag_name,
                         {"tag": ag_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
@@ -970,7 +970,7 @@ class App:
                     hit = acct_map.get(acct_clean) or (acct_map.get(acct_clean[-10:]) if len(acct_clean) > 10 else None)
                     if hit:
                         ag_tag, ag_name, ag_photo = resolve_agent(hit)
-                if ag_tag not in ("BCRM", "UNASSIGNED"):
+                if ag_tag in tag_map:
                     agstat = agents.setdefault(
                         ag_name,
                         {"tag": ag_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},

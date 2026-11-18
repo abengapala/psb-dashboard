@@ -211,7 +211,7 @@ export async function parseFieldExcelFile(
         const hit = acctMap[acctClean] || (acctClean.length > 10 ? acctMap[acctClean.slice(-10)] : undefined);
         if (hit) resolved = resolveFieldAgent(hit);
       }
-      if (resolved.key !== 'BCRM' && resolved.key !== 'UNASSIGNED') {
+      if (resolved.key in TAG_TO_AGENT) {
         const agKey = resolved.name;
         let agStat = agentMap.get(agKey);
         if (!agStat) {

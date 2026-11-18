@@ -12,10 +12,13 @@ const CAP: React.CSSProperties = {
   lineHeight: 1.1,
 };
 
+const MAIN_TAGS = new Set([
+  'CSAYSON', 'ABORONG', 'JSPENA', 'EBASTASA', 'CJBCRUZ',
+  'PSAVEDRA', 'RHAMA', 'JMOSENDE', 'JGALOPE',
+]);
+
 export function FieldVisitPage({ field, entered }: { field: FieldReport; entered: boolean }) {
-  const taggedAgents = field.agents.filter(
-    (ag) => ag.tag !== 'BCRM' && ag.tag !== 'UNASSIGNED' && ag.name.toUpperCase() !== 'BCRM' && ag.name.toUpperCase() !== 'UNASSIGNED',
-  );
+  const taggedAgents = field.agents.filter((ag) => MAIN_TAGS.has(ag.tag));
 
   return (
     <div
