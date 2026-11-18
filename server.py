@@ -89,7 +89,179 @@ class App:
                     out.append(list(ws.iter_rows(values_only=True)))
             finally:
                 wb.close()
-        return out[0], out[1]
+        return out
+
+    @staticmethod
+    def _read_field(xlsx: Path):
+        """Parse PSB FIELD RESULT*.xlsx (Not Cancel sheet, or raw sheet filtered for PSB, excluding CANCEL)."""
+        from openpyxl import load_workbook
+        tag_map = {
+            "CSAYSON": ("Chelsea Sayson", "photos/Chelsea.png"),
+            "ABORONG": ("Aira Borong", "photos/aira.png"),
+            "JSPENA": ("Jhumir Peña", "photos/jhumir.png"),
+            "EBASTASA": ("Eurie Bastasa", "photos/eurie.png"),
+            "CJBCRUZ": ("Charles Cruz", "photos/charles.png"),
+            "PSAVEDRA": ("Polo Savedra", "photos/polo.png"),
+            "RHAMA": ("Rodel Hama", "photos/rodel.png"),
+            "JMOSENDE": ("Jaymark Mosende", "photos/jaymark.png"),
+            "JGALOPE": ("Josafat Galope", "photos/josafat.png"),
+        }
+
+        def clean(v):
+            return " ".join(str(v).split()) if v is not None else ""
+
+        def num(v):
+            if isinstance(v, (int, float)):
+                return float(v)
+            try:
+                return float(str(v).replace(",", "").strip())
+            except (TypeError, ValueError):
+                return 0.0
+
+        def classify(raw):
+            u = raw.strip().upper()
+            if not u:
+                return None
+            if "CANCEL" in u:
+                return "CANCEL"
+            if "REPO" in u or u == "VS" or "SURRENDER" in u:
+                return "REPO"
+            if "PTP" in u:
+                return "PTP"
+            if u == "POS" or "POSITIVE" in u:
+                return "POS"
+            if u == "NEG" or "NEGATIVE" in u:
+                return "NEG"
+            return None
+
+        with tempfile.TemporaryDirectory() as tmp:
+            copy = Path(tmp) / "field.xlsx"
+            shutil.copy2(xlsx, copy)
+            wb = load_workbook(copy, data_only=True, read_only=True)
+            try:
+                sname = next((n for n in wb.sheetnames if n.strip().upper() == "NOT CANCEL"), None)
+                if not sname:
+                    sname = next((n for n in wb.sheetnames if "RESULT" in n.upper()), wb.sheetnames[0])
+                ws = wb[sname]
+                ws.reset_dimensions()
+                rows = list(ws.iter_rows(values_only=True))
+            finally:
+                wb.close()
+
+        hi = next(
+            (i for i, r in enumerate(rows[:15])
+             if r and "AREA" in [clean(c).upper() for c in r]
+             and any("FV RESULT" in clean(c).upper() or clean(c).upper() == "STATUS" for c in r)),
+            None,
+        )
+        if hi is None:
+            return None
+
+        hdr = [clean(c).upper() for c in rows[hi]]
+        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
+        col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
+        col_bank = next((j for j, h in enumerate(hdr) if "BANK" in h), -1)
+        col_ob = next((j for j, h in enumerate(hdr) if h == "OB" or "OUTSTANDING" in h), -1)
+        col_date = next((j for j, h in enumerate(hdr) if "FV RESULT DATE" in h or h == "DATE"), -1)
+        col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h), -1)
+        if col_res < 0:
+            col_res = next((j for j, h in enumerate(hdr) if "FV RESULT" in h or h == "STATUS"), -1)
+        if col_area < 0 or col_res < 0:
+            return None
+
+        areas = {}
+        agents = {}
+        pos = ptp = repo = neg = 0
+        total_ob = 0.0
+        max_date = ""
+
+        for r in rows[hi + 1:]:
+            if not r or not any(c is not None and c != "" for c in r):
+                continue
+            if col_bank >= 0 and col_bank < len(r):
+                bval = clean(r[col_bank]).upper()
+                if bval and "PSB" not in bval:
+                    continue
+            area = clean(r[col_area] if col_area < len(r) else None).upper()
+            if not area:
+                continue
+            kind = classify(clean(r[col_res] if col_res < len(r) else None))
+            if not kind or kind == "CANCEL":
+                continue
+
+            ob = num(r[col_ob]) if 0 <= col_ob < len(r) else 0.0
+            raw_tag = clean(r[col_agent]).upper() if 0 <= col_agent < len(r) else ""
+            if 0 <= col_date < len(r) and r[col_date] is not None:
+                dv = r[col_date]
+                if isinstance(dv, (dt.datetime, dt.date)):
+                    ds = dv.strftime("%Y-%m-%d")
+                    if ds > max_date:
+                        max_date = ds
+
+            if kind == "POS":
+                pos += 1
+            elif kind == "PTP":
+                ptp += 1
+            elif kind == "REPO":
+                repo += 1
+            elif kind == "NEG":
+                neg += 1
+            total_ob += ob
+            is_pos = kind in ("POS", "PTP", "REPO")
+
+            astat = areas.setdefault(area, {"area": area, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0})
+            astat["total"] += 1
+            if is_pos:
+                astat["positive"] += 1
+            astat[kind.lower()] += 1
+            astat["ob"] = round(astat["ob"] + ob, 2)
+
+            if raw_tag:
+                mapped = tag_map.get(raw_tag)
+                ag_name = mapped[0] if mapped else raw_tag
+                ag_photo = mapped[1] if mapped else None
+                agstat = agents.setdefault(
+                    ag_name,
+                    {"tag": raw_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
+                )
+                agstat["total"] += 1
+                if is_pos:
+                    agstat["positive"] += 1
+                agstat[kind.lower()] += 1
+                agstat["ob"] = round(agstat["ob"] + ob, 2)
+
+        total = pos + ptp + repo + neg
+        positive = pos + ptp + repo
+        pos_rate = round((positive / total * 100), 1) if total else 0.0
+        as_of = max_date or dt.datetime.fromtimestamp(xlsx.stat().st_mtime).strftime("%Y-%m-%d")
+        return {
+            "asOf": as_of,
+            "total": total,
+            "positive": positive,
+            "pos": pos,
+            "ptp": ptp,
+            "repo": repo,
+            "neg": neg,
+            "positiveRate": pos_rate,
+            "totalOb": round(total_ob, 2),
+            "areas": sorted(areas.values(), key=lambda x: (-x["total"], -x["positive"])),
+            "agents": sorted(agents.values(), key=lambda x: (-x["positive"], -x["total"])),
+        }
+
+    def rebuild_field(self, field_xlsx: Path):
+        """Update only data['field'] in data.json from a Field Result Excel file."""
+        with self.lock:
+            field = self._read_field(field_xlsx)
+            if not field:
+                return False
+            for p in (self.dist / "data.json", HERE / "public" / "data.json"):
+                if p.exists():
+                    data = json.loads(p.read_text(encoding="utf-8"))
+                    data["field"] = field
+                    p.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+            threading.Thread(target=self._push_to_github, args=(field_xlsx.name,), daemon=True).start()
+            log(f"updated Field Visit Map: {field['total']} visits ({field['positive']} positive, {field['positiveRate']}%)")
+            return True[0], out[1]
 
     @staticmethod
     def _read_eod(xlsx: Path):
@@ -137,6 +309,178 @@ class App:
                     out.append({"bucket": b.upper(), "count": num(r[off + 1]),
                                 "ac": round(num(r[off + 2]), 2), "ob": round(num(r[off + 3]), 2)})
                 return out
+
+    @staticmethod
+    def _read_field(xlsx: Path):
+        """Parse PSB FIELD RESULT*.xlsx (Not Cancel sheet, or raw sheet filtered for PSB, excluding CANCEL)."""
+        from openpyxl import load_workbook
+        tag_map = {
+            "CSAYSON": ("Chelsea Sayson", "photos/Chelsea.png"),
+            "ABORONG": ("Aira Borong", "photos/aira.png"),
+            "JSPENA": ("Jhumir Peña", "photos/jhumir.png"),
+            "EBASTASA": ("Eurie Bastasa", "photos/eurie.png"),
+            "CJBCRUZ": ("Charles Cruz", "photos/charles.png"),
+            "PSAVEDRA": ("Polo Savedra", "photos/polo.png"),
+            "RHAMA": ("Rodel Hama", "photos/rodel.png"),
+            "JMOSENDE": ("Jaymark Mosende", "photos/jaymark.png"),
+            "JGALOPE": ("Josafat Galope", "photos/josafat.png"),
+        }
+
+        def clean(v):
+            return " ".join(str(v).split()) if v is not None else ""
+
+        def num(v):
+            if isinstance(v, (int, float)):
+                return float(v)
+            try:
+                return float(str(v).replace(",", "").strip())
+            except (TypeError, ValueError):
+                return 0.0
+
+        def classify(raw):
+            u = raw.strip().upper()
+            if not u:
+                return None
+            if "CANCEL" in u:
+                return "CANCEL"
+            if "REPO" in u or u == "VS" or "SURRENDER" in u:
+                return "REPO"
+            if "PTP" in u:
+                return "PTP"
+            if u == "POS" or "POSITIVE" in u:
+                return "POS"
+            if u == "NEG" or "NEGATIVE" in u:
+                return "NEG"
+            return None
+
+        with tempfile.TemporaryDirectory() as tmp:
+            copy = Path(tmp) / "field.xlsx"
+            shutil.copy2(xlsx, copy)
+            wb = load_workbook(copy, data_only=True, read_only=True)
+            try:
+                sname = next((n for n in wb.sheetnames if n.strip().upper() == "NOT CANCEL"), None)
+                if not sname:
+                    sname = next((n for n in wb.sheetnames if "RESULT" in n.upper()), wb.sheetnames[0])
+                ws = wb[sname]
+                ws.reset_dimensions()
+                rows = list(ws.iter_rows(values_only=True))
+            finally:
+                wb.close()
+
+        hi = next(
+            (i for i, r in enumerate(rows[:15])
+             if r and "AREA" in [clean(c).upper() for c in r]
+             and any("FV RESULT" in clean(c).upper() or clean(c).upper() == "STATUS" for c in r)),
+            None,
+        )
+        if hi is None:
+            return None
+
+        hdr = [clean(c).upper() for c in rows[hi]]
+        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
+        col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
+        col_bank = next((j for j, h in enumerate(hdr) if "BANK" in h), -1)
+        col_ob = next((j for j, h in enumerate(hdr) if h == "OB" or "OUTSTANDING" in h), -1)
+        col_date = next((j for j, h in enumerate(hdr) if "FV RESULT DATE" in h or h == "DATE"), -1)
+        col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h), -1)
+        if col_res < 0:
+            col_res = next((j for j, h in enumerate(hdr) if "FV RESULT" in h or h == "STATUS"), -1)
+        if col_area < 0 or col_res < 0:
+            return None
+
+        areas = {}
+        agents = {}
+        pos = ptp = repo = neg = 0
+        total_ob = 0.0
+        max_date = ""
+
+        for r in rows[hi + 1:]:
+            if not r or not any(c is not None and c != "" for c in r):
+                continue
+            if col_bank >= 0 and col_bank < len(r):
+                bval = clean(r[col_bank]).upper()
+                if bval and "PSB" not in bval:
+                    continue
+            area = clean(r[col_area] if col_area < len(r) else None).upper()
+            if not area:
+                continue
+            kind = classify(clean(r[col_res] if col_res < len(r) else None))
+            if not kind or kind == "CANCEL":
+                continue
+
+            ob = num(r[col_ob]) if 0 <= col_ob < len(r) else 0.0
+            raw_tag = clean(r[col_agent]).upper() if 0 <= col_agent < len(r) else ""
+            if 0 <= col_date < len(r) and r[col_date] is not None:
+                dv = r[col_date]
+                if isinstance(dv, (dt.datetime, dt.date)):
+                    ds = dv.strftime("%Y-%m-%d")
+                    if ds > max_date:
+                        max_date = ds
+
+            if kind == "POS":
+                pos += 1
+            elif kind == "PTP":
+                ptp += 1
+            elif kind == "REPO":
+                repo += 1
+            elif kind == "NEG":
+                neg += 1
+            total_ob += ob
+            is_pos = kind in ("POS", "PTP", "REPO")
+
+            astat = areas.setdefault(area, {"area": area, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0})
+            astat["total"] += 1
+            if is_pos:
+                astat["positive"] += 1
+            astat[kind.lower()] += 1
+            astat["ob"] = round(astat["ob"] + ob, 2)
+
+            if raw_tag:
+                mapped = tag_map.get(raw_tag)
+                ag_name = mapped[0] if mapped else raw_tag
+                ag_photo = mapped[1] if mapped else None
+                agstat = agents.setdefault(
+                    ag_name,
+                    {"tag": raw_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
+                )
+                agstat["total"] += 1
+                if is_pos:
+                    agstat["positive"] += 1
+                agstat[kind.lower()] += 1
+                agstat["ob"] = round(agstat["ob"] + ob, 2)
+
+        total = pos + ptp + repo + neg
+        positive = pos + ptp + repo
+        pos_rate = round((positive / total * 100), 1) if total else 0.0
+        as_of = max_date or dt.datetime.fromtimestamp(xlsx.stat().st_mtime).strftime("%Y-%m-%d")
+        return {
+            "asOf": as_of,
+            "total": total,
+            "positive": positive,
+            "pos": pos,
+            "ptp": ptp,
+            "repo": repo,
+            "neg": neg,
+            "positiveRate": pos_rate,
+            "totalOb": round(total_ob, 2),
+            "areas": sorted(areas.values(), key=lambda x: (-x["total"], -x["positive"])),
+            "agents": sorted(agents.values(), key=lambda x: (-x["positive"], -x["total"])),
+        }
+
+    def rebuild_field(self, field_xlsx: Path):
+        """Update only data['field'] in data.json from a Field Result Excel file."""
+        with self.lock:
+            field = self._read_field(field_xlsx)
+            if not field:
+                return False
+            for p in (self.dist / "data.json", HERE / "public" / "data.json"):
+                if p.exists():
+                    data = json.loads(p.read_text(encoding="utf-8"))
+                    data["field"] = field
+                    p.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+            threading.Thread(target=self._push_to_github, args=(field_xlsx.name,), daemon=True).start()
+            log(f"updated Field Visit Map: {field['total']} visits ({field['positive']} positive, {field['positiveRate']}%)")
+            return True
 
             ptp_rows = side(0)
             conf_rows = side(4)
@@ -258,6 +602,178 @@ class App:
                 out[name.lower()] = float(val)
         return out
 
+    @staticmethod
+    def _read_field(xlsx: Path):
+        """Parse PSB FIELD RESULT*.xlsx (Not Cancel sheet, or raw sheet filtered for PSB, excluding CANCEL)."""
+        from openpyxl import load_workbook
+        tag_map = {
+            "CSAYSON": ("Chelsea Sayson", "photos/Chelsea.png"),
+            "ABORONG": ("Aira Borong", "photos/aira.png"),
+            "JSPENA": ("Jhumir Peña", "photos/jhumir.png"),
+            "EBASTASA": ("Eurie Bastasa", "photos/eurie.png"),
+            "CJBCRUZ": ("Charles Cruz", "photos/charles.png"),
+            "PSAVEDRA": ("Polo Savedra", "photos/polo.png"),
+            "RHAMA": ("Rodel Hama", "photos/rodel.png"),
+            "JMOSENDE": ("Jaymark Mosende", "photos/jaymark.png"),
+            "JGALOPE": ("Josafat Galope", "photos/josafat.png"),
+        }
+
+        def clean(v):
+            return " ".join(str(v).split()) if v is not None else ""
+
+        def num(v):
+            if isinstance(v, (int, float)):
+                return float(v)
+            try:
+                return float(str(v).replace(",", "").strip())
+            except (TypeError, ValueError):
+                return 0.0
+
+        def classify(raw):
+            u = raw.strip().upper()
+            if not u:
+                return None
+            if "CANCEL" in u:
+                return "CANCEL"
+            if "REPO" in u or u == "VS" or "SURRENDER" in u:
+                return "REPO"
+            if "PTP" in u:
+                return "PTP"
+            if u == "POS" or "POSITIVE" in u:
+                return "POS"
+            if u == "NEG" or "NEGATIVE" in u:
+                return "NEG"
+            return None
+
+        with tempfile.TemporaryDirectory() as tmp:
+            copy = Path(tmp) / "field.xlsx"
+            shutil.copy2(xlsx, copy)
+            wb = load_workbook(copy, data_only=True, read_only=True)
+            try:
+                sname = next((n for n in wb.sheetnames if n.strip().upper() == "NOT CANCEL"), None)
+                if not sname:
+                    sname = next((n for n in wb.sheetnames if "RESULT" in n.upper()), wb.sheetnames[0])
+                ws = wb[sname]
+                ws.reset_dimensions()
+                rows = list(ws.iter_rows(values_only=True))
+            finally:
+                wb.close()
+
+        hi = next(
+            (i for i, r in enumerate(rows[:15])
+             if r and "AREA" in [clean(c).upper() for c in r]
+             and any("FV RESULT" in clean(c).upper() or clean(c).upper() == "STATUS" for c in r)),
+            None,
+        )
+        if hi is None:
+            return None
+
+        hdr = [clean(c).upper() for c in rows[hi]]
+        col_agent = next((j for j, h in enumerate(hdr) if "AGENT" in h), -1)
+        col_area = next((j for j, h in enumerate(hdr) if "AREA" in h), -1)
+        col_bank = next((j for j, h in enumerate(hdr) if "BANK" in h), -1)
+        col_ob = next((j for j, h in enumerate(hdr) if h == "OB" or "OUTSTANDING" in h), -1)
+        col_date = next((j for j, h in enumerate(hdr) if "FV RESULT DATE" in h or h == "DATE"), -1)
+        col_res = next((j for j, h in enumerate(hdr) if "ADDRESS" in h), -1)
+        if col_res < 0:
+            col_res = next((j for j, h in enumerate(hdr) if "FV RESULT" in h or h == "STATUS"), -1)
+        if col_area < 0 or col_res < 0:
+            return None
+
+        areas = {}
+        agents = {}
+        pos = ptp = repo = neg = 0
+        total_ob = 0.0
+        max_date = ""
+
+        for r in rows[hi + 1:]:
+            if not r or not any(c is not None and c != "" for c in r):
+                continue
+            if col_bank >= 0 and col_bank < len(r):
+                bval = clean(r[col_bank]).upper()
+                if bval and "PSB" not in bval:
+                    continue
+            area = clean(r[col_area] if col_area < len(r) else None).upper()
+            if not area:
+                continue
+            kind = classify(clean(r[col_res] if col_res < len(r) else None))
+            if not kind or kind == "CANCEL":
+                continue
+
+            ob = num(r[col_ob]) if 0 <= col_ob < len(r) else 0.0
+            raw_tag = clean(r[col_agent]).upper() if 0 <= col_agent < len(r) else ""
+            if 0 <= col_date < len(r) and r[col_date] is not None:
+                dv = r[col_date]
+                if isinstance(dv, (dt.datetime, dt.date)):
+                    ds = dv.strftime("%Y-%m-%d")
+                    if ds > max_date:
+                        max_date = ds
+
+            if kind == "POS":
+                pos += 1
+            elif kind == "PTP":
+                ptp += 1
+            elif kind == "REPO":
+                repo += 1
+            elif kind == "NEG":
+                neg += 1
+            total_ob += ob
+            is_pos = kind in ("POS", "PTP", "REPO")
+
+            astat = areas.setdefault(area, {"area": area, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0})
+            astat["total"] += 1
+            if is_pos:
+                astat["positive"] += 1
+            astat[kind.lower()] += 1
+            astat["ob"] = round(astat["ob"] + ob, 2)
+
+            if raw_tag:
+                mapped = tag_map.get(raw_tag)
+                ag_name = mapped[0] if mapped else raw_tag
+                ag_photo = mapped[1] if mapped else None
+                agstat = agents.setdefault(
+                    ag_name,
+                    {"tag": raw_tag, "name": ag_name, "total": 0, "positive": 0, "pos": 0, "ptp": 0, "repo": 0, "neg": 0, "ob": 0.0, "photo": ag_photo},
+                )
+                agstat["total"] += 1
+                if is_pos:
+                    agstat["positive"] += 1
+                agstat[kind.lower()] += 1
+                agstat["ob"] = round(agstat["ob"] + ob, 2)
+
+        total = pos + ptp + repo + neg
+        positive = pos + ptp + repo
+        pos_rate = round((positive / total * 100), 1) if total else 0.0
+        as_of = max_date or dt.datetime.fromtimestamp(xlsx.stat().st_mtime).strftime("%Y-%m-%d")
+        return {
+            "asOf": as_of,
+            "total": total,
+            "positive": positive,
+            "pos": pos,
+            "ptp": ptp,
+            "repo": repo,
+            "neg": neg,
+            "positiveRate": pos_rate,
+            "totalOb": round(total_ob, 2),
+            "areas": sorted(areas.values(), key=lambda x: (-x["total"], -x["positive"])),
+            "agents": sorted(agents.values(), key=lambda x: (-x["positive"], -x["total"])),
+        }
+
+    def rebuild_field(self, field_xlsx: Path):
+        """Update only data['field'] in data.json from a Field Result Excel file."""
+        with self.lock:
+            field = self._read_field(field_xlsx)
+            if not field:
+                return False
+            for p in (self.dist / "data.json", HERE / "public" / "data.json"):
+                if p.exists():
+                    data = json.loads(p.read_text(encoding="utf-8"))
+                    data["field"] = field
+                    p.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+            threading.Thread(target=self._push_to_github, args=(field_xlsx.name,), daemon=True).start()
+            log(f"updated Field Visit Map: {field['total']} visits ({field['positive']} positive, {field['positiveRate']}%)")
+            return True
+
     def rebuild(self, xlsx: Path):
         """Run the existing generator; returns (ok, message, warnings)."""
         with self.lock:
@@ -296,6 +812,21 @@ class App:
                 if eod is not None:
                     data["eod"] = eod
                     changed = True
+                # Preserve or refresh Field Visit data if a PSB FIELD RESULT file is in Downloads
+                field_xlsx = find_latest_field_xlsx(xlsx.parent)
+                if field_xlsx and field_xlsx.exists():
+                    field = self._read_field(field_xlsx)
+                    if field is not None:
+                        data["field"] = field
+                        changed = True
+                elif (HERE / "public" / "data.json").exists():
+                    try:
+                        prev_d = json.loads((HERE / "public" / "data.json").read_text(encoding="utf-8"))
+                        if "field" in prev_d:
+                            data["field"] = prev_d["field"]
+                            changed = True
+                    except Exception:
+                        pass
                 ob_targets = self._read_ob_targets(xlsx)
                 if ob_targets:
                     ob_target_sum = 0.0
@@ -534,8 +1065,19 @@ def find_latest_xlsx(xlsx: Path) -> Path | None:
     return max(candidates, key=lambda f: f.stat().st_mtime)
 
 
+def find_latest_field_xlsx(folder: Path) -> Path | None:
+    if not folder.exists():
+        return None
+    candidates = [
+        f for f in folder.glob("PSB FIELD RESULT*.xlsx")
+        if f.is_file() and not f.name.startswith("~$")
+    ]
+    return max(candidates, key=lambda f: f.stat().st_mtime) if candidates else None
+
+
 def watch(app: App, xlsx: Path, interval: int):
     last = None
+    last_field = None
     while True:
         try:
             target = find_latest_xlsx(xlsx)
@@ -548,6 +1090,16 @@ def watch(app: App, xlsx: Path, interval: int):
                     log(f"Excel changed: {target.name}")
                     app.rebuild(target)
                     last = sig
+            f_target = find_latest_field_xlsx(xlsx.parent)
+            if f_target and f_target.exists():
+                fst = f_target.stat()
+                fsig = (str(f_target), fst.st_mtime, fst.st_size)
+                if fsig != last_field:
+                    if last_field is not None:
+                        time.sleep(2)
+                        log(f"Field Excel changed: {f_target.name}")
+                        app.rebuild_field(f_target)
+                    last_field = fsig
         except Exception as e:
             log(f"watch error (will retry): {e}")
         time.sleep(interval)

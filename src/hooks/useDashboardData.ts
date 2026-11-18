@@ -101,6 +101,45 @@ function normalize(raw: unknown): Data {
           },
         }
       : undefined,
+    field: r.field && typeof r.field === 'object'
+      ? {
+          asOf: String(r.field.asOf ?? ''),
+          total: num(r.field.total),
+          positive: num(r.field.positive),
+          pos: num(r.field.pos),
+          ptp: num(r.field.ptp),
+          repo: num(r.field.repo),
+          neg: num(r.field.neg),
+          positiveRate: num(r.field.positiveRate),
+          totalOb: num(r.field.totalOb),
+          areas: Array.isArray(r.field.areas)
+            ? r.field.areas.map((a) => ({
+                area: String(a?.area ?? ''),
+                total: num(a?.total),
+                positive: num(a?.positive),
+                pos: num(a?.pos),
+                ptp: num(a?.ptp),
+                repo: num(a?.repo),
+                neg: num(a?.neg),
+                ob: num(a?.ob),
+              }))
+            : [],
+          agents: Array.isArray(r.field.agents)
+            ? r.field.agents.map((ag) => ({
+                tag: String(ag?.tag ?? ''),
+                name: String(ag?.name ?? ''),
+                total: num(ag?.total),
+                positive: num(ag?.positive),
+                pos: num(ag?.pos),
+                ptp: num(ag?.ptp),
+                repo: num(ag?.repo),
+                neg: num(ag?.neg),
+                ob: num(ag?.ob),
+                photo: resolvePhoto(String(ag?.name ?? ag?.tag ?? ''), ag?.photo),
+              }))
+            : [],
+        }
+      : undefined,
   };
 }
 

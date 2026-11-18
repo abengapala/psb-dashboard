@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { LogOut, Upload, CheckCircle, AlertTriangle, RefreshCw, Shield, Shuffle, Eye, EyeOff, Copy } from 'lucide-react';
+import { LogOut, Upload, CheckCircle, AlertTriangle, RefreshCw, Shield, Shuffle, Eye, EyeOff, Copy, MapPin } from 'lucide-react';
 import { parseExcelFile } from '../lib/parseExcel';
+import { parseFieldExcelFile } from '../lib/parseFieldExcel';
 
 // The password is checked by server.py (default "psb2026", change with --password).
 const PW_KEY = 'psb_admin_pw';
@@ -155,10 +156,12 @@ type UploadState = 'idle' | 'uploading' | 'success' | 'error';
 
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [dragOver, setDragOver] = useState(false);
+  const [fieldDragOver, setFieldDragOver] = useState(false);
   const [uploadState, setUploadState] = useState<UploadState>('idle');
   const [message, setMessage] = useState('');
   const [log, setLog] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const fieldInputRef = useRef<HTMLInputElement>(null);
 
   // TV Viewer Passcode state
   const [viewerRequired, setViewerRequired] = useState(true);
@@ -341,6 +344,75 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     if (file) processFile(file);
   }, [processFile]);
 
+  const processFieldFile = useCallback(async (file: File) => {
+    const lower = file.name.toLowerCase();
+    if (!lower.endsWith('.xlsx') && !lower.endsWith('.xlsm')) {
+      setMessage('Please upload an Excel file (.xlsx)');
+      setUploadState('error');
+      return;
+    }
+
+    setUploadState('uploading');
+    setMessage('Processing Field Visit Excel file...');
+    setLog([]);
+
+    try {
+      const { field, summary } = await parseFieldExcelFile(file);
+      const apiRes = await fetch('./api/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Password': sessionStorage.getItem(PW_KEY) ?? '',
+        },
+        body: JSON.stringify({
+          type: 'field',
+          filename: file.name,
+          summary,
+          field,
+        }),
+      });
+
+      if (apiRes.status === 401) {
+        onLogout();
+        return;
+      }
+
+      const apiJson = await apiRes.json().catch(() => ({}));
+      if (apiRes.ok) {
+        if (apiJson.data) {
+          try {
+            localStorage.setItem('psb_override_data', JSON.stringify(apiJson.data));
+          } catch {
+            // ignore
+          }
+        }
+        setUploadState('success');
+        setMessage(apiJson.message || 'Field Visit Map updated!');
+        setLog(apiJson.log || [`File: ${file.name}`, summary]);
+      } else {
+        setUploadState('error');
+        setMessage(apiJson.message || `Server error (${apiRes.status})`);
+        setLog(apiJson.log || [summary]);
+      }
+    } catch (err) {
+      setUploadState('error');
+      setMessage(err instanceof Error ? err.message : 'Could not process the Field Visit Excel file.');
+      setLog(['Check that the file has AREA and FV RESULT / STATUS columns.']);
+    }
+  }, [onLogout]);
+
+  const onFieldDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setFieldDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) processFieldFile(file);
+  }, [processFieldFile]);
+
+  const onFieldChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) processFieldFile(file);
+  }, [processFieldFile]);
+
   const stateColor = {
     idle: '#3b82f6',
     uploading: '#f59e0b',
@@ -398,39 +470,75 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           </button>
         </div>
 
-        {/* Drop Zone */}
-        <div
-          onDragOver={e => { e.preventDefault(); setDragOver(true); }}
-          onDragLeave={() => setDragOver(false)}
-          onDrop={onDrop}
-          onClick={() => fileInputRef.current?.click()}
-          style={{
-            border: `2px dashed ${dragOver ? '#6366f1' : 'var(--border)'}`,
-            borderRadius: 20,
-            padding: '48px 24px',
-            textAlign: 'center',
-            cursor: 'pointer',
-            background: dragOver ? 'rgba(99, 102, 241, 0.06)' : 'var(--card)',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".xlsx,.xlsm"
-            onChange={onFileChange}
-            style={{ display: 'none' }}
-          />
-          <Upload size={40} color="#6366f1" style={{ margin: '0 auto 16px' }} />
-          <p style={{ fontSize: 18, fontWeight: 700, color: 'var(--fg)', margin: 0 }}>
-            Drop your Excel file here
-          </p>
-          <p style={{ fontSize: 13, color: 'var(--muted-fg)', marginTop: 6 }}>
-            or click to browse — accepts .xlsx
-          </p>
-          <p style={{ fontSize: 12, color: 'var(--muted-fg)', marginTop: 4 }}>
-            Expected file: <strong style={{ color: '#f59e0b' }}>PSB AUTO CURING MONITORING 2026.xlsx</strong>
-          </p>
+        {/* Drop Zones (Main Monitoring + Field Visit Result) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+          <div
+            onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={onDrop}
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              border: `2px dashed ${dragOver ? '#6366f1' : 'var(--border)'}`,
+              borderRadius: 20,
+              padding: '36px 20px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              background: dragOver ? 'rgba(99, 102, 241, 0.06)' : 'var(--card)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".xlsx,.xlsm"
+              onChange={onFileChange}
+              style={{ display: 'none' }}
+            />
+            <Upload size={34} color="#6366f1" style={{ margin: '0 auto 12px' }} />
+            <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--fg)', margin: 0 }}>
+              1. Performance &amp; EOD Excel
+            </p>
+            <p style={{ fontSize: 12, color: 'var(--muted-fg)', marginTop: 6 }}>
+              Drop or click to browse (.xlsx)
+            </p>
+            <p style={{ fontSize: 11, color: '#f59e0b', marginTop: 4, fontWeight: 600 }}>
+              PSB AUTO CURING MONITORING 2026.xlsx
+            </p>
+          </div>
+
+          <div
+            onDragOver={e => { e.preventDefault(); setFieldDragOver(true); }}
+            onDragLeave={() => setFieldDragOver(false)}
+            onDrop={onFieldDrop}
+            onClick={() => fieldInputRef.current?.click()}
+            style={{
+              border: `2px dashed ${fieldDragOver ? '#22c55e' : 'var(--border)'}`,
+              borderRadius: 20,
+              padding: '36px 20px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              background: fieldDragOver ? 'rgba(34, 197, 94, 0.06)' : 'var(--card)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <input
+              ref={fieldInputRef}
+              type="file"
+              accept=".xlsx,.xlsm"
+              onChange={onFieldChange}
+              style={{ display: 'none' }}
+            />
+            <MapPin size={34} color="#22c55e" style={{ margin: '0 auto 12px' }} />
+            <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--fg)', margin: 0 }}>
+              2. Field Visit Result Excel
+            </p>
+            <p style={{ fontSize: 12, color: 'var(--muted-fg)', marginTop: 6 }}>
+              Updates Philippines Field Map (excludes Cancel)
+            </p>
+            <p style={{ fontSize: 11, color: '#22c55e', marginTop: 4, fontWeight: 600 }}>
+              PSB FIELD RESULT ...xlsx
+            </p>
+          </div>
         </div>
 
         {/* Status */}

@@ -11,6 +11,8 @@ export function Header({
   entered,
   page = 'perf',
   hasEod = false,
+  hasField = false,
+  onSelectPage,
   onTogglePage,
 }: {
   month: string;
@@ -19,10 +21,30 @@ export function Header({
   stale: boolean;
   offline: boolean;
   entered: boolean;
-  page?: 'perf' | 'eod';
+  page?: 'perf' | 'eod' | 'field';
   hasEod?: boolean;
+  hasField?: boolean;
+  onSelectPage?: (p: 'perf' | 'eod' | 'field') => void;
   onTogglePage?: () => void;
 }) {
+  const eyebrow =
+    page === 'eod'
+      ? 'PSB AUTO CURING · EOD REPORT 2026 (COLS A–H)'
+      : page === 'field'
+        ? 'PSB AUTO CURING · FIELD VISIT MONITORING'
+        : 'PSB AUTO CURING · LIVE PERFORMANCE';
+  const title =
+    page === 'eod'
+      ? 'Daily EOD Report — PTP & Confirmed Payment'
+      : page === 'field'
+        ? 'Philippines Field Visit Map & Results'
+        : 'Individual Performance Monitoring';
+  const showSwitcher = hasEod || hasField;
+  const pick = (p: 'perf' | 'eod' | 'field') => {
+    if (onSelectPage) onSelectPage(p);
+    else if (onTogglePage) onTogglePage();
+  };
+
   return (
     <header
       style={{
@@ -50,7 +72,7 @@ export function Header({
             lineHeight: 1.1,
           }}
         >
-          PSB AUTO CURING · {page === 'eod' ? 'EOD REPORT 2026 (COLS A–H)' : 'LIVE PERFORMANCE'}
+          {eyebrow}
         </span>
         <h1
           style={{
@@ -65,57 +87,84 @@ export function Header({
             textOverflow: 'ellipsis',
           }}
         >
-          {page === 'eod' ? 'Daily EOD Report — PTP & Confirmed Payment' : 'Individual Performance Monitoring'}
+          {title}
         </h1>
       </div>
 
       {/* Right: stale badge + page switcher + manpower chip + month pill + live updated status */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.65vw', flexShrink: 0 }}>
-        {hasEod && (
-          <button
-            type="button"
-            onClick={onTogglePage}
-            title="Auto-rotates every 20 seconds (click to switch now)"
+        {showSwitcher && (
+          <div
+            title="Auto-rotates every 20 seconds (click a tab to switch now)"
             style={{
               position: 'relative',
               overflow: 'hidden',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.45vw',
+              gap: '0.3vw',
               height: 'clamp(28px, 3.4vh, 38px)',
-              padding: '0 0.85vw',
+              padding: '0 0.65vw',
               borderRadius: 999,
               background: 'var(--glass-bg)',
               border: '1px solid var(--glass-border)',
               color: 'var(--t1)',
               fontFamily: 'var(--font-mono)',
-              fontSize: 'clamp(10px, 0.75vw, 14px)',
+              fontSize: 'clamp(10px, 0.72vw, 13px)',
               fontWeight: 600,
-              cursor: 'pointer',
             }}
           >
-            <span
+            <button
+              type="button"
+              onClick={() => pick('perf')}
               style={{
+                border: 'none',
                 padding: '2px 7px',
                 borderRadius: 999,
                 background: page === 'perf' ? C.lime : 'transparent',
                 color: page === 'perf' ? '#0b0b0c' : 'var(--t2)',
+                cursor: 'pointer',
+                font: 'inherit',
                 transition: `all 350ms ${EASE}`,
               }}
             >
               1 PERFORMANCE
-            </span>
-            <span
-              style={{
-                padding: '2px 7px',
-                borderRadius: 999,
-                background: page === 'eod' ? C.lime : 'transparent',
-                color: page === 'eod' ? '#0b0b0c' : 'var(--t2)',
-                transition: `all 350ms ${EASE}`,
-              }}
-            >
-              2 EOD REPORT
-            </span>
+            </button>
+            {hasEod && (
+              <button
+                type="button"
+                onClick={() => pick('eod')}
+                style={{
+                  border: 'none',
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  background: page === 'eod' ? C.lime : 'transparent',
+                  color: page === 'eod' ? '#0b0b0c' : 'var(--t2)',
+                  cursor: 'pointer',
+                  font: 'inherit',
+                  transition: `all 350ms ${EASE}`,
+                }}
+              >
+                2 EOD
+              </button>
+            )}
+            {hasField && (
+              <button
+                type="button"
+                onClick={() => pick('field')}
+                style={{
+                  border: 'none',
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  background: page === 'field' ? C.lime : 'transparent',
+                  color: page === 'field' ? '#0b0b0c' : 'var(--t2)',
+                  cursor: 'pointer',
+                  font: 'inherit',
+                  transition: `all 350ms ${EASE}`,
+                }}
+              >
+                {hasEod ? '3 FIELD MAP' : '2 FIELD MAP'}
+              </button>
+            )}
             <span
               key={page}
               style={{
@@ -127,7 +176,7 @@ export function Header({
                 animation: 'tv-page-timer 20s linear forwards',
               }}
             />
-          </button>
+          </div>
         )}
         {stale && (
           <div

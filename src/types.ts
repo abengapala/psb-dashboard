@@ -47,6 +47,44 @@ export type EodReport = {
   confirmedTotal: EodTotals;
 };
 
+export type FieldAreaStat = {
+  area: string;
+  total: number;
+  positive: number;
+  pos: number;
+  ptp: number;
+  repo: number;
+  neg: number;
+  ob: number;
+};
+
+export type FieldAgentStat = {
+  tag: string;
+  name: string;
+  total: number;
+  positive: number;
+  pos: number;
+  ptp: number;
+  repo: number;
+  neg: number;
+  ob: number;
+  photo: string | null;
+};
+
+export type FieldReport = {
+  asOf: string;
+  total: number;
+  positive: number;
+  pos: number;
+  ptp: number;
+  repo: number;
+  neg: number;
+  positiveRate: number;
+  totalOb: number;
+  areas: FieldAreaStat[];
+  agents: FieldAgentStat[];
+};
+
 export type Data = {
   month: string;
   updatedAt: string;
@@ -55,4 +93,5 @@ export type Data = {
   agents: Agent[];
   warnings: string[];
   eod?: EodReport;
+  field?: FieldReport;
 };

@@ -10,6 +10,7 @@ import { Footer } from './components/Footer';
 import { MilestoneToast } from './components/MilestoneToast';
 import { AdminPage } from './components/AdminPage';
 import { EodPage } from './components/EodPage';
+import { FieldVisitPage } from './components/FieldVisitPage';
 import { ViewerGate } from './components/ViewerGate';
 import { EASE } from './lib/format';
 
@@ -23,23 +24,32 @@ function TVDashboard() {
   // Staggered entrance once on first load
   const [entered, setEntered] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
-  const [page, setPage] = useState<'perf' | 'eod'>('perf');
+  const [page, setPage] = useState<'perf' | 'eod' | 'field'>('perf');
 
   const hasEod = Boolean(
     data?.eod && (data.eod.ptp.length > 0 || data.eod.confirmed.length > 0),
   );
+  const hasField = Boolean(data?.field && data.field.total > 0);
 
-  // Auto-rotate between Performance and Daily EOD Report every 20 seconds
+  const pages: ('perf' | 'eod' | 'field')[] = ['perf'];
+  if (hasEod) pages.push('eod');
+  if (hasField) pages.push('field');
+  const activePage = pages.includes(page) ? page : 'perf';
+
+  // Auto-rotate between Performance, Daily EOD Report, and Field Visit Map every 20 seconds
   useEffect(() => {
-    if (!hasEod) {
+    if (pages.length <= 1) {
       setPage('perf');
       return;
     }
     const id = setInterval(() => {
-      setPage((prev) => (prev === 'perf' ? 'eod' : 'perf'));
+      setPage((prev) => {
+        const idx = pages.indexOf(prev);
+        return pages[(idx + 1) % pages.length];
+      });
     }, ROTATE_MS);
     return () => clearInterval(id);
-  }, [hasEod, page]);
+  }, [hasEod, hasField, activePage]);
 
   useEffect(() => {
     if (!data || entered) return;
@@ -134,12 +144,13 @@ function TVDashboard() {
         stale={stale}
         offline={offline}
         entered={entered}
-        page={hasEod ? page : 'perf'}
+        page={activePage}
         hasEod={hasEod}
-        onTogglePage={() => setPage((p) => (p === 'perf' ? 'eod' : 'perf'))}
+        hasField={hasField}
+        onSelectPage={setPage}
       />
 
-      {/* Row 2: Rotating Page Viewport (Performance <-> Daily EOD Report every 20s) */}
+      {/* Row 2: Rotating Page Viewport (Performance <-> EOD <-> Field Visit Map every 20s) */}
       <div style={{ position: 'relative', minHeight: 0, height: '100%', overflow: 'hidden' }}>
         {/* Page 1: Individual Performance Monitoring */}
         <div
@@ -150,15 +161,15 @@ function TVDashboard() {
             gridTemplateRows: 'auto 1fr',
             gap: '0.95vh',
             minHeight: 0,
-            opacity: page === 'perf' || !hasEod ? 1 : 0,
+            opacity: activePage === 'perf' ? 1 : 0,
             transform:
-              page === 'perf' || !hasEod
+              activePage === 'perf'
                 ? 'translate3d(0, 0, 0) scale(1)'
                 : 'translate3d(-1.5vw, 0, 0) scale(0.985)',
             transition: reduce
               ? 'none'
               : `opacity 750ms ${EASE}, transform 850ms ${EASE}`,
-            pointerEvents: page === 'perf' || !hasEod ? 'auto' : 'none',
+            pointerEvents: activePage === 'perf' ? 'auto' : 'none',
           }}
         >
           {/* 5 KPI Cards (12-col grid) */}
@@ -215,18 +226,40 @@ function TVDashboard() {
               position: 'absolute',
               inset: 0,
               minHeight: 0,
-              opacity: page === 'eod' ? 1 : 0,
+              opacity: activePage === 'eod' ? 1 : 0,
               transform:
-                page === 'eod'
+                activePage === 'eod'
                   ? 'translate3d(0, 0, 0) scale(1)'
                   : 'translate3d(1.5vw, 0, 0) scale(0.985)',
               transition: reduce
                 ? 'none'
                 : `opacity 750ms ${EASE}, transform 850ms ${EASE}`,
-              pointerEvents: page === 'eod' ? 'auto' : 'none',
+              pointerEvents: activePage === 'eod' ? 'auto' : 'none',
             }}
           >
-            <EodPage eod={data.eod} entered={page === 'eod'} />
+            <EodPage eod={data.eod} entered={activePage === 'eod'} />
+          </div>
+        )}
+
+        {/* Page 3: Philippines Field Visit Map */}
+        {hasField && data.field && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              minHeight: 0,
+              opacity: activePage === 'field' ? 1 : 0,
+              transform:
+                activePage === 'field'
+                  ? 'translate3d(0, 0, 0) scale(1)'
+                  : 'translate3d(1.5vw, 0, 0) scale(0.985)',
+              transition: reduce
+                ? 'none'
+                : `opacity 750ms ${EASE}, transform 850ms ${EASE}`,
+              pointerEvents: activePage === 'field' ? 'auto' : 'none',
+            }}
+          >
+            <FieldVisitPage field={data.field} entered={activePage === 'field'} />
           </div>
         )}
       </div>
