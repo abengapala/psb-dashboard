@@ -1,33 +1,33 @@
 {
   "month": "NOVEMBER 2026",
-  "updatedAt": "2026-11-16T16:13:03",
-  "generatedAt": "2026-11-16T16:50:00",
+  "updatedAt": "2026-11-19T02:17:07",
+  "generatedAt": "2026-11-19T02:18:01",
   "kpi": {
     "manpower": 9,
     "bankTarget": 12495486.39,
-    "posted": 4692181.08,
+    "posted": 4833625.67,
     "repoPosted": 1971713.93,
     "repoCount": 3,
-    "variance": 7803305.31,
-    "pctAchieved": 37.55,
-    "obTargetTotal": 225000000.0,
-    "obCuredTotal": 61053181.67,
-    "obVariance": 163946818.33,
-    "obPctAchieved": 27.13
+    "variance": 7661860.72,
+    "pctAchieved": 38.68,
+    "obTargetTotal": 225000000,
+    "obCuredTotal": 64867028.09,
+    "obVariance": 160132971.91,
+    "obPctAchieved": 28.83
   },
   "agents": [
     {
       "name": "Charles Cruz",
       "month": "NOVEMBER",
-      "finalPosted": 200321.5,
+      "finalPosted": 241866.09,
       "target": 1692007.63,
-      "pct": 11.84,
-      "obCured": 4741149.37,
-      "repoPosted": 0.0,
+      "pct": 14.29,
+      "obCured": 5899794.16,
+      "obTarget": 25000000,
+      "obPct": 23.6,
+      "repoPosted": 0,
       "repoCount": 0,
-      "photo": "photos/charles.png",
-      "obTarget": 25000000.0,
-      "obPct": 18.96
+      "photo": "photos/charles.png"
     },
     {
       "name": "Jhumir Peña",
@@ -36,11 +36,11 @@
       "target": 1692007.63,
       "pct": 29.81,
       "obCured": 11143650.31,
-      "repoPosted": 0.0,
+      "obTarget": 25000000,
+      "obPct": 44.57,
+      "repoPosted": 0,
       "repoCount": 0,
-      "photo": "photos/jhumir.png",
-      "obTarget": 25000000.0,
-      "obPct": 44.57
+      "photo": "photos/jhumir.png"
     },
     {
       "name": "Polo Savedra",
@@ -49,11 +49,11 @@
       "target": 1692007.63,
       "pct": 27.66,
       "obCured": 8243605.13,
-      "repoPosted": 0.0,
+      "obTarget": 25000000,
+      "obPct": 32.97,
+      "repoPosted": 0,
       "repoCount": 0,
-      "photo": "photos/polo.png",
-      "obTarget": 25000000.0,
-      "obPct": 32.97
+      "photo": "photos/polo.png"
     },
     {
       "name": "Jaymark Mosende",
@@ -62,11 +62,11 @@
       "target": 1692007.63,
       "pct": 24.87,
       "obCured": 9677700.4,
-      "repoPosted": 0.0,
+      "obTarget": 25000000,
+      "obPct": 38.71,
+      "repoPosted": 0,
       "repoCount": 0,
-      "photo": "photos/jaymark.png",
-      "obTarget": 25000000.0,
-      "obPct": 38.71
+      "photo": "photos/jaymark.png"
     },
     {
       "name": "Chelsea Sayson",
@@ -75,11 +75,11 @@
       "target": 1692007.63,
       "pct": 50.87,
       "obCured": 8292348.25,
+      "obTarget": 25000000,
+      "obPct": 33.17,
       "repoPosted": 516841.34,
       "repoCount": 1,
-      "photo": "photos/Chelsea.png",
-      "obTarget": 25000000.0,
-      "obPct": 33.17
+      "photo": "photos/Chelsea.png"
     },
     {
       "name": "Rodel Hama",
@@ -88,37 +88,37 @@
       "target": 1692007.63,
       "pct": 8.89,
       "obCured": 2572294.94,
-      "repoPosted": 0.0,
+      "obTarget": 25000000,
+      "obPct": 10.29,
+      "repoPosted": 0,
       "repoCount": 0,
-      "photo": "photos/rodel.png",
-      "obTarget": 25000000.0,
-      "obPct": 10.29
+      "photo": "photos/rodel.png"
     },
     {
       "name": "Aira Borong",
       "month": "NOVEMBER",
-      "finalPosted": 996028.83,
+      "finalPosted": 1035928.83,
       "target": 781146.87,
-      "pct": 127.51,
-      "obCured": 7068638.89,
-      "repoPosted": 736000.0,
+      "pct": 132.62,
+      "obCured": 8434573.52,
+      "obTarget": 25000000,
+      "obPct": 33.74,
+      "repoPosted": 736000,
       "repoCount": 1,
-      "photo": "photos/aira.png",
-      "obTarget": 25000000.0,
-      "obPct": 28.27
+      "photo": "photos/aira.png"
     },
     {
       "name": "Josafat Galope",
       "month": "NOVEMBER",
-      "finalPosted": 887172.58,
+      "finalPosted": 947172.58,
       "target": 781146.87,
-      "pct": 113.57,
-      "obCured": 4429316.55,
+      "pct": 121.25,
+      "obCured": 5718583.55,
+      "obTarget": 25000000,
+      "obPct": 22.87,
       "repoPosted": 718872.59,
       "repoCount": 1,
-      "photo": "photos/josafat.png",
-      "obTarget": 25000000.0,
-      "obPct": 17.72
+      "photo": "photos/josafat.png"
     },
     {
       "name": "Eurie Bastasa",
@@ -127,11 +127,11 @@
       "target": 781146.87,
       "pct": 26.15,
       "obCured": 4884477.83,
-      "repoPosted": 0.0,
+      "obTarget": 25000000,
+      "obPct": 19.54,
+      "repoPosted": 0,
       "repoCount": 0,
-      "photo": "photos/eurie.png",
-      "obTarget": 25000000.0,
-      "obPct": 19.54
+      "photo": "photos/eurie.png"
     }
   ],
   "warnings": [],
@@ -140,13 +140,13 @@
     "ptp": [
       {
         "bucket": "FRONT END",
-        "count": 53.0,
+        "count": 53,
         "ac": 1365248.35,
         "ob": 30704188.6
       },
       {
         "bucket": "MIDRANGE",
-        "count": 12.0,
+        "count": 12,
         "ac": 427752.33,
         "ob": 9001242.33
       }
@@ -159,13 +159,13 @@
     "confirmed": [
       {
         "bucket": "FRONT END",
-        "count": 29.0,
+        "count": 29,
         "ac": 821165.27,
         "ob": 16276537.11
       },
       {
         "bucket": "MID RANGE",
-        "count": 11.0,
+        "count": 11,
         "ac": 247182.5,
         "ob": 7605967.14
       }
@@ -215,7 +215,7 @@
         "ptp": 1,
         "repo": 0,
         "neg": 0,
-        "ob": 5000381.0
+        "ob": 5000381
       },
       {
         "area": "MARIKINA",
@@ -245,7 +245,7 @@
         "ptp": 0,
         "repo": 0,
         "neg": 4,
-        "ob": 2032411.0
+        "ob": 2032411
       },
       {
         "area": "CAMANAVA",
@@ -275,7 +275,7 @@
         "ptp": 0,
         "repo": 0,
         "neg": 3,
-        "ob": 1533489.0
+        "ob": 1533489
       },
       {
         "area": "ORIENTAL MINDORO",
@@ -285,7 +285,7 @@
         "ptp": 0,
         "repo": 0,
         "neg": 0,
-        "ob": 916950.0
+        "ob": 916950
       },
       {
         "area": "ALBAY",
@@ -295,7 +295,7 @@
         "ptp": 0,
         "repo": 0,
         "neg": 0,
-        "ob": 25012.0
+        "ob": 25012
       },
       {
         "area": "DAVAO DEL SUR",
@@ -305,7 +305,7 @@
         "ptp": 0,
         "repo": 0,
         "neg": 0,
-        "ob": 905788.0
+        "ob": 905788
       },
       {
         "area": "BULACAN",
@@ -325,7 +325,7 @@
         "ptp": 0,
         "repo": 0,
         "neg": 1,
-        "ob": 937668.0
+        "ob": 937668
       },
       {
         "area": "LAGUNA",
@@ -345,7 +345,7 @@
         "ptp": 1,
         "repo": 0,
         "neg": 0,
-        "ob": 0.0
+        "ob": 0
       },
       {
         "area": "BATANGAS",
@@ -355,7 +355,7 @@
         "ptp": 0,
         "repo": 0,
         "neg": 0,
-        "ob": 825695.0
+        "ob": 825695
       },
       {
         "area": "CAVITE",
@@ -375,7 +375,7 @@
         "ptp": 0,
         "repo": 0,
         "neg": 1,
-        "ob": 199454.0
+        "ob": 199454
       },
       {
         "area": "ZAMBOANGA",
@@ -398,7 +398,7 @@
         "ptp": 1,
         "repo": 0,
         "neg": 1,
-        "ob": 6605924.0,
+        "ob": 6605924,
         "photo": "photos/aira.png"
       },
       {
