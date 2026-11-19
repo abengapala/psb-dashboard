@@ -177,15 +177,15 @@
     }
   },
   "field": {
-    "asOf": "2026-11-17",
-    "total": 57,
-    "positive": 32,
-    "pos": 26,
+    "asOf": "2026-11-19",
+    "total": 64,
+    "positive": 33,
+    "pos": 27,
     "ptp": 5,
     "repo": 1,
-    "neg": 25,
-    "positiveRate": 56.1,
-    "totalOb": 34646700.28,
+    "neg": 31,
+    "positiveRate": 51.6,
+    "totalOb": 39330291.13,
     "areas": [
       {
         "area": "QUEZON PROVINCE",
@@ -208,6 +208,16 @@
         "ob": 2633983.49
       },
       {
+        "area": "CEBU",
+        "total": 6,
+        "positive": 4,
+        "pos": 2,
+        "ptp": 2,
+        "repo": 0,
+        "neg": 2,
+        "ob": 6150733.51
+      },
+      {
         "area": "NUEVA ECIJA",
         "total": 5,
         "positive": 5,
@@ -228,24 +238,14 @@
         "ob": 3828537.23
       },
       {
-        "area": "CEBU",
-        "total": 4,
-        "positive": 4,
-        "pos": 2,
-        "ptp": 2,
-        "repo": 0,
-        "neg": 0,
-        "ob": 4469276.48
-      },
-      {
         "area": "MUNTINLUPA",
-        "total": 4,
+        "total": 5,
         "positive": 0,
         "pos": 0,
         "ptp": 0,
         "repo": 0,
-        "neg": 4,
-        "ob": 2032411
+        "neg": 5,
+        "ob": 2423266
       },
       {
         "area": "CAMANAVA",
@@ -268,6 +268,16 @@
         "ob": 1499182.22
       },
       {
+        "area": "BATANGAS",
+        "total": 3,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 2,
+        "ob": 2008653.2
+      },
+      {
         "area": "DAVAO DEL NORTE",
         "total": 3,
         "positive": 0,
@@ -276,6 +286,16 @@
         "repo": 0,
         "neg": 3,
         "ob": 1533489
+      },
+      {
+        "area": "LAGUNA",
+        "total": 3,
+        "positive": 0,
+        "pos": 0,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 3,
+        "ob": 2592993.59
       },
       {
         "area": "ORIENTAL MINDORO",
@@ -328,16 +348,6 @@
         "ob": 937668
       },
       {
-        "area": "LAGUNA",
-        "total": 2,
-        "positive": 0,
-        "pos": 0,
-        "ptp": 0,
-        "repo": 0,
-        "neg": 2,
-        "ob": 1164672.97
-      },
-      {
         "area": "CAMSUR",
         "total": 1,
         "positive": 1,
@@ -348,16 +358,6 @@
         "ob": 0
       },
       {
-        "area": "BATANGAS",
-        "total": 1,
-        "positive": 1,
-        "pos": 1,
-        "ptp": 0,
-        "repo": 0,
-        "neg": 0,
-        "ob": 825695
-      },
-      {
         "area": "CAVITE",
         "total": 1,
         "positive": 1,
@@ -366,6 +366,16 @@
         "repo": 0,
         "neg": 0,
         "ob": 613194.34
+      },
+      {
+        "area": "PARANAQUE",
+        "total": 1,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 0,
+        "ob": 0
       },
       {
         "area": "BACOLOD",
@@ -392,86 +402,86 @@
       {
         "tag": "ABORONG",
         "name": "Aira Borong",
-        "total": 8,
-        "positive": 7,
-        "pos": 6,
+        "total": 10,
+        "positive": 10,
+        "pos": 8,
         "ptp": 1,
-        "repo": 0,
-        "neg": 1,
-        "ob": 6605924,
+        "repo": 1,
+        "neg": 0,
+        "ob": 6095477,
         "photo": "photos/aira.png"
+      },
+      {
+        "tag": "JSPENA",
+        "name": "Jhumir Peña",
+        "total": 17,
+        "positive": 6,
+        "pos": 6,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 11,
+        "ob": 11212872.6,
+        "photo": "photos/jhumir.png"
       },
       {
         "tag": "CSAYSON",
         "name": "Chelsea Sayson",
-        "total": 10,
-        "positive": 5,
-        "pos": 4,
+        "total": 12,
+        "positive": 6,
+        "pos": 5,
         "ptp": 1,
         "repo": 0,
-        "neg": 5,
-        "ob": 4579928.57,
+        "neg": 6,
+        "ob": 6028432.97,
         "photo": "photos/Chelsea.png"
       },
       {
         "tag": "PSAVEDRA",
         "name": "Polo Savedra",
-        "total": 6,
+        "total": 7,
         "positive": 5,
         "pos": 4,
         "ptp": 1,
         "repo": 0,
-        "neg": 1,
-        "ob": 3407467.18,
+        "neg": 2,
+        "ob": 4151693,
         "photo": "photos/polo.png"
-      },
-      {
-        "tag": "JMOSENDE",
-        "name": "Jaymark Mosende",
-        "total": 5,
-        "positive": 4,
-        "pos": 2,
-        "ptp": 2,
-        "repo": 0,
-        "neg": 1,
-        "ob": 4801934.33,
-        "photo": "photos/jaymark.png"
-      },
-      {
-        "tag": "JSPENA",
-        "name": "Jhumir Peña",
-        "total": 9,
-        "positive": 2,
-        "pos": 2,
-        "ptp": 0,
-        "repo": 0,
-        "neg": 7,
-        "ob": 5968098.89,
-        "photo": "photos/jhumir.png"
       },
       {
         "tag": "CJBCRUZ",
         "name": "Charles Cruz",
-        "total": 3,
-        "positive": 2,
-        "pos": 2,
-        "ptp": 0,
+        "total": 7,
+        "positive": 3,
+        "pos": 1,
+        "ptp": 2,
         "repo": 0,
-        "neg": 1,
-        "ob": 1828345.22,
+        "neg": 4,
+        "ob": 4205786.72,
         "photo": "photos/charles.png"
       },
       {
         "tag": "EBASTASA",
         "name": "Eurie Bastasa",
+        "total": 7,
+        "positive": 1,
+        "pos": 1,
+        "ptp": 0,
+        "repo": 0,
+        "neg": 6,
+        "ob": 4242918.18,
+        "photo": "photos/eurie.png"
+      },
+      {
+        "tag": "JMOSENDE",
+        "name": "Jaymark Mosende",
         "total": 2,
         "positive": 1,
         "pos": 1,
         "ptp": 0,
         "repo": 0,
         "neg": 1,
-        "ob": 737240.46,
-        "photo": "photos/eurie.png"
+        "ob": 1610980.32,
+        "photo": "photos/jaymark.png"
       }
     ]
   }
