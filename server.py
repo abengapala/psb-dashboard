@@ -1289,6 +1289,53 @@ def make_handler(app: App):
                     return self._json(200, {"message": "Dashboard updated!", "log": lines})
                 return self._json(422, {"message": "Could not read this Excel file.", "log": [msg]})
 
+            if route == "/api/upload":
+                if not self._authed():
+                    return self._json(401, {"message": "Not logged in. Please sign in again."})
+                try:
+                    payload = json.loads(body or b"{}")
+                except Exception:
+                    return self._json(400, {"message": "Invalid JSON payload."})
+                up_type = payload.get("type", "main")
+                fname = payload.get("filename", "upload.xlsx")
+                summary = payload.get("summary", "")
+                with app.lock:
+                    data_file = app.dist / "data.json"
+                    pub_file = HERE / "public" / "data.json"
+                    existing = {}
+                    for cand in (data_file, pub_file):
+                        if cand.exists():
+                            try:
+                                existing = json.loads(cand.read_text(encoding="utf-8"))
+                                break
+                            except Exception:
+                                pass
+                    if up_type == "field":
+                        field_obj = payload.get("field")
+                        if not isinstance(field_obj, dict):
+                            return self._json(400, {"message": "Invalid field visit payload."})
+                        existing["field"] = field_obj
+                        final_data = existing
+                        msg_ok = "Field Visit Map updated!"
+                    else:
+                        d_obj = payload.get("data")
+                        if not isinstance(d_obj, dict):
+                            return self._json(400, {"message": "Invalid dashboard payload."})
+                        if existing.get("field") and not d_obj.get("field"):
+                            d_obj["field"] = existing["field"]
+                        final_data = d_obj
+                        msg_ok = "Dashboard updated!"
+                    out_txt = json.dumps(final_data, indent=2, ensure_ascii=False)
+                    data_file.write_text(out_txt, encoding="utf-8")
+                    if pub_file.parent.exists():
+                        pub_file.write_text(out_txt, encoding="utf-8")
+                log(f"admin uploaded {up_type}: {fname}")
+                return self._json(200, {
+                    "message": msg_ok,
+                    "log": [f"File: {fname}", summary or msg_ok, "TV screen will update within 15 seconds."],
+                    "data": final_data,
+                })
+
             self._json(404, {"message": "Not found"})
 
     return Handler
